@@ -1,6 +1,6 @@
 //#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-//#include <SOIL2/SOIL2.h>
+#include <soil2/SOIL2.h>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -22,6 +22,7 @@ private:
 public:
 	Utils();
 	static bool checkOpenGLError();
+	static bool isExtensionSupported(const char* extName);
 	static GLuint createShaderProgram(const char *vp, const char *fp);
 	static GLuint createShaderProgram(const char *vp, const char *gp, const char *fp);
 	static GLuint createShaderProgram(const char *vp, const char *tCS, const char* tES, const char *fp);

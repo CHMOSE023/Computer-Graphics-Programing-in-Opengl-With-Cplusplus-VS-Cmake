@@ -171,23 +171,40 @@ GLuint Utils::createShaderProgram(const char *vp, const char *tCS, const char* t
 //    return textureRef;
 //}
 
-//GLuint Utils::loadTexture(const char *texImagePath)
-//{
-//    GLuint textureRef;
-//    textureRef = SOIL_load_OGL_texture(texImagePath, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-//    if (textureRef == 0) cout << "didnt find texture file " << texImagePath << endl;
-//    // ----- mipmap/anisotropic section
-//    glBindTexture(GL_TEXTURE_2D, textureRef);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-//    glGenerateMipmap(GL_TEXTURE_2D);
-//    if (glewIsSupported("GL_EXT_texture_filter_anisotropic")) {
-//        GLfloat anisoset = 0.0f;
-//        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisoset);
-//        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoset);
-//    }
-//    // ----- end of mipmap/anisotropic section
-//    return textureRef;
-//}
+
+bool Utils::isExtensionSupported(const char* extName) {
+    GLint numExtensions;
+    glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
+    for (GLint i = 0; i < numExtensions; ++i) {
+        const char* extension = reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i));
+        if (std::strcmp(extension, extName) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+GLuint Utils::loadTexture(const char *texImagePath)
+{
+    GLuint textureRef;
+    textureRef = SOIL_load_OGL_texture(texImagePath, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+    if (textureRef == 0) cout << "didnt find texture file " << texImagePath << endl;
+    // ----- mipmap/anisotropic section
+    glBindTexture(GL_TEXTURE_2D, textureRef);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
+	
+    if (isExtensionSupported("GL_EXT_texture_filter_anisotropic")) {
+        GLfloat anisoset = 0.0f;
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &anisoset);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, anisoset);
+    }
+	else {
+		cout << "anisotropic filtering not supported" << endl;
+	}
+    // ----- end of mipmap/anisotropic section
+    return textureRef;
+}
 
 // GOLD material - ambient, diffuse, specular, and shininess
 float* Utils::goldAmbient() { static float a[4] = { 0.2473f, 0.1995f, 0.0745f, 1 }; return (float*)a; }
