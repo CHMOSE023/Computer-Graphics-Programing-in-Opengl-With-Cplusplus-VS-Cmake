@@ -26,4 +26,4 @@ This will build the project and compile all the programs located within the src 
 ---------------------------
 #### You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++, 2nd Edition by V. Scott Gordon and John Clevenger.
 
-![image1](graph.png "image1")
+![image1](graphi.png "image1")
