@@ -48,7 +48,7 @@ foreach(SOURCE_FILE ${SOURCE_FILES})
     foreach(FILE ${ALL_FILES})
         file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
     endforeach()
-
+ 
 endforeach()
 
 #add_executable(program

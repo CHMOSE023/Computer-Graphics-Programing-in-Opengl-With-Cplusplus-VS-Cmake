@@ -192,6 +192,7 @@ GLuint Utils::loadTexture(const char *texImagePath)
     // ----- mipmap/anisotropic section
     glBindTexture(GL_TEXTURE_2D, textureRef);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glGenerateMipmap(GL_TEXTURE_2D);
 	
     if (isExtensionSupported("GL_EXT_texture_filter_anisotropic")) {

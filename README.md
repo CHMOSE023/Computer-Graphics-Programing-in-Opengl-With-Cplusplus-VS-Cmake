@@ -11,7 +11,7 @@ Since there is no official repository with the book's program code, I took it up
 
 1. clone the repository.
 ```sh
-git@github.com:Nobody-1321/Computer-Graphics-Programing-in-Opengl-With-C.git
+git clone git@github.com:Nobody-1321/Computer-Graphics-Programing-in-Opengl-With-C.git
 ```
 2. Move to the directory GRAPHICS
 ```sh
