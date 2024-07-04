@@ -141,7 +141,7 @@ int main(void) {
     }
 
     init(window);
-    
+
     while (!glfwWindowShouldClose(window)) {
         display(window, glfwGetTime());
         glfwSwapBuffers(window);

@@ -40,16 +40,26 @@ void setupVertices(void) {
         -1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,
          1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f
     };
-    
-    float pyTexCoords[36] = {
-        0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f,
-        1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
-        1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
-        1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
-        1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
-        1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f
-    };
 
+    float pyTexCoords[36] = {
+        0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // Primer triángulo
+        0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // Segundo triángulo
+        0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // Tercer triángulo
+        0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // Cuarto triángulo
+        0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // Quinto triángulo
+        0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f  // Sexto triángulo
+    };
+    
+    /*
+        float pyTexCoords[36] = {
+            0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f,
+            1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
+            1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
+            1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
+            1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f,
+            1.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f
+        };
+    */
     glGenVertexArrays(numVAOs, vao);  
     glBindVertexArray(vao[0]);
     glGenBuffers(numVBOs, vbo);  
@@ -62,7 +72,7 @@ void setupVertices(void) {
 }
 
 void init(GLFWwindow *window) {    
-    renderingProgram = Utils::createShaderProgram("vertex_shader511.glsl", "fragment_shader511.glsl");
+    renderingProgram = Utils::createShaderProgram("vertex_shader51.glsl", "fragment_shader51.glsl");
     
     if (Utils::checkOpenGLError()) {
         std::cout << "ERROR: Could not create the shader program" << std::endl;
@@ -70,12 +80,12 @@ void init(GLFWwindow *window) {
 
     glfwGetFramebufferSize(window, &width, &height);
     aspect = (float)width / (float)height;
-    pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 1000.0f);
+    pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
     
-    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 6.0f;
     pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 2.0f;
     
-    brickTexture = Utils::loadTexture("sand.png");
+    brickTexture = Utils::loadTexture("foto.png");
 
     setupVertices();
 }

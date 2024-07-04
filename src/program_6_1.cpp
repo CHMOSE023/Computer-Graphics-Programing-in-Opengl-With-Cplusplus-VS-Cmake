@@ -11,7 +11,7 @@
 using namespace std;
 
 #define numVAOs 1
-#define numVBOs 2
+#define numVBOs 2  //changed from 2 to 3
 
 float cameraX, cameraY, cameraZ;
 float pyrLocX, pyrLocY, pyrLocZ;
@@ -25,14 +25,14 @@ int width, height;
 float aspect;
 
 glm::mat4 pMat, vMat, mMat, mvMat;
-Sphere mySphere(1.0f, 36, 18);  // Inicialización de la esfera
+Sphere mySphere(1.0f, 72, 36);  // Initialize a sphere with radius 1.0, 72 sectors, and 36 stacks
 
 void setupVertices() {
-    // Obtener los índices y vértices de la esfera
-    std::vector<unsigned int> ind = mySphere.getIndices();
+    // get the vertices and indices from sphere object
+    std::vector<unsigned int> ind = mySphere.getIndices(); 
     std::vector<glm::vec3> vert = mySphere.getVertices();
 
-    // Aplanar los vértices para el buffer
+    // create a vector to store the vertex data 
     std::vector<float> pvalues;
     for (const auto& v : vert) {
         pvalues.push_back(v.x);
@@ -40,20 +40,23 @@ void setupVertices() {
         pvalues.push_back(v.z);
     }
 
+    int numIndices = mySphere.getNumIndices();
+    int numVertices = mySphere.getNumVertices();
+
     glGenVertexArrays(numVAOs, vao);
     glBindVertexArray(vao[0]);
 
     glGenBuffers(numVBOs, vbo);
 
-    // Configurar VBO para vértices
+    // configure VBO for vertices
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
     glBufferData(GL_ARRAY_BUFFER, pvalues.size() * sizeof(float), &pvalues[0], GL_STATIC_DRAW);
 
-    // Configurar IBO para índices
+    // Configure VBO for indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * sizeof(unsigned int), &ind[0], GL_STATIC_DRAW);
 
-    // Enlazar el atributo de los vértices
+    // link the vertex attributes with the buffer data
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
@@ -61,69 +64,50 @@ void setupVertices() {
 }
 
 void init(GLFWwindow *window) {
-    // Crea el programa de shaders usando los archivos de shaders especificados
+    
     renderingProgram = Utils::createShaderProgram("vertex_shader61.glsl", "fragment_shader61.glsl");
 
-    // Verifica si hubo errores al crear el programa de shaders
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;
     }
 
-    // Obtiene el tamaño del framebuffer para calcular la relación de aspecto
     glfwGetFramebufferSize(window, &width, &height);
     aspect = static_cast<float>(width) / static_cast<float>(height);
 
-    // Configura la matriz de proyección con un campo de visión de 60 grados, relación de aspecto, y plano cercano y lejano
     pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
 
-    // Inicializa la posición de la cámara y el objeto
     cameraX = 0.0f; cameraY = 0.0f; cameraZ = 2.0f;
     pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 0.0f;
 
-    // Configura los vértices y los índices para la esfera
     setupVertices();
 }
 
 void display(GLFWwindow *window, double currentTime) {
-    // Limpia el buffer de profundidad y el buffer de color
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-    // Configura el color de fondo
     glClearColor(0.0, 0.0, 0.0, 1.0);
 
-    // Utiliza el programa de shaders
     glUseProgram(renderingProgram);
 
-    // Obtiene las ubicaciones de las variables uniformes en el shader
     projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
     mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
 
-    // Configura la matriz de vista moviendo la cámara a la posición especificada
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
 
-    // Configura la matriz de modelo moviendo el objeto a la posición especificada
     mMat = glm::translate(glm::mat4(1.0f), glm::vec3(pyrLocX, pyrLocY, pyrLocZ));
 
-    // Calcula la matriz modelo-vista combinando las matrices de vista y modelo
     mvMat = vMat * mMat;
 
-    // Pasa las matrices de proyección y modelo-vista al shader
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
     glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 
-    // Enlaza el VAO que contiene los vértices y los índices de la esfera
     glBindVertexArray(vao[0]);
 
-    // Habilita el test de profundidad
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    // Dibuja los segmentos de línea de los triángulos
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawElements(GL_TRIANGLES, mySphere.getNumIndices(), GL_UNSIGNED_INT, 0);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    // Desenlaza el VAO
     glBindVertexArray(0);
 }
 

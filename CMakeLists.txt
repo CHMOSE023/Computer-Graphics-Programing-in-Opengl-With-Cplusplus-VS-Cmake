@@ -29,6 +29,9 @@ foreach(SOURCE_FILE ${SOURCE_FILES})
         ${SOURCE_FILE}
         ${UTILS_MAIN_DIR}/Utils.cpp
         ${UTILS_MAIN_DIR}/Utils.hpp
+        ${UTILS_MAIN_DIR}/Sphere.cpp
+        ${UTILS_MAIN_DIR}/Sphere.hpp
+
     )
 
     target_link_libraries(${SOURCE_FILE_NAME} glad glfw glm::glm soil2 ${OPENGL_LIBRARIES})

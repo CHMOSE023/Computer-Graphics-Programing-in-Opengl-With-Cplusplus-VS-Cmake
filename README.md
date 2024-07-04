@@ -24,6 +24,27 @@ make
 This will build the project and compile all the programs located within the src folder. If you don't want to compile all the programs, you can comment out the foreach block in the CMakeLists.txt file and create an executable for the specific program you are interested in compiling, keep in mind that you must specify the correct path to the GLS files or any other files necessary for the program's execution.
 
 ---------------------------
+
+<table>
+  <tr>
+    <td>
+      <img src="ruta/a/tu/imagen1.png" alt="Descripción de la imagen 1" width="200"/>
+    </td>
+    <td>
+      <img src="ruta/a/tu/imagen2.png" alt="Descripción de la imagen 2" width="200"/>
+    </td>
+    <td>
+      <img src="ruta/a/tu/imagen3.png" alt="Descripción de la imagen 3" width="200"/>
+    </td>
+  </tr>
+  <tr>
+    <td>Descripción 1</td>
+    <td>Descripción 2</td>
+    <td>Descripción 3</td>
+  </tr>
+</table>
+
+---------------------------
 #### You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++, Third Edition by V. Scott Gordon and John Clevenger.
 
 ![image1](graphi.png "image1")
