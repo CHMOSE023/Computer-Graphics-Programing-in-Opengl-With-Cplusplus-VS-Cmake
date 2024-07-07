@@ -11,12 +11,13 @@
 using namespace std;
 
 #define numVAOs 1
-#define numVBOs 2  //changed from 2 to 3
+#define numVBOs 3  //changed from 2 to 3
 
 float cameraX, cameraY, cameraZ;
-float pyrLocX, pyrLocY, pyrLocZ;
 
 GLuint renderingProgram;
+GLuint worldTexture;
+
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 
@@ -56,11 +57,17 @@ void setupVertices() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * sizeof(unsigned int), &ind[0], GL_STATIC_DRAW);
 
-    // link the vertex attributes with the buffer data
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
+    // Configure VBO for texture coordinates
+    std::vector<glm::vec2> texCoords = mySphere.getTexCoords();
+    std::vector<float> tvalues;
+    for (const auto& t : texCoords) {
+        tvalues.push_back(t.s);
+        tvalues.push_back(t.t);
+    }
 
-    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+    glBufferData(GL_ARRAY_BUFFER, tvalues.size() * sizeof(float), &tvalues[0], GL_STATIC_DRAW);
+
 }
 
 void init(GLFWwindow *window) {
@@ -76,8 +83,9 @@ void init(GLFWwindow *window) {
 
     pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
 
-    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 2.0f;
-    pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 0.0f;
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 4.0f;
+
+    worldTexture = Utils::loadTexture("world.jpg");
 
     setupVertices();
 }
@@ -91,24 +99,33 @@ void display(GLFWwindow *window, double currentTime) {
 
     projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
     mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
-
+    
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
 
-    mMat = glm::translate(glm::mat4(1.0f), glm::vec3(pyrLocX, pyrLocY, pyrLocZ));
+    // Aplicar la rotación de 45 grados alrededor del eje Y
+    float angle = glm::radians(45.0f);
+    mMat = glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
 
     mvMat = vMat * mMat;
 
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
     glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 
-    glBindVertexArray(vao[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); // link the vertex attributes with the buffer data
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0); // link the texture attributes with the buffer data
+    glEnableVertexAttribArray(1);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, worldTexture);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
     glDrawElements(GL_TRIANGLES, mySphere.getNumIndices(), GL_UNSIGNED_INT, 0);
-
-    glBindVertexArray(0);
 }
 
 int main(void) {
@@ -121,7 +138,7 @@ int main(void) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(1080, 720, "Exercise", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1080, 720, "program_6_1", NULL, NULL);
     if (!window) {
         std::cerr << "ERROR: GLFW window could not be created" << std::endl;
         glfwTerminate();

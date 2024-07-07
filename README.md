@@ -25,24 +25,13 @@ This will build the project and compile all the programs located within the src 
 
 ---------------------------
 
-<table>
-  <tr>
-    <td>
-      <img src="ruta/a/tu/imagen1.png" alt="Descripción de la imagen 1" width="200"/>
-    </td>
-    <td>
-      <img src="ruta/a/tu/imagen2.png" alt="Descripción de la imagen 2" width="200"/>
-    </td>
-    <td>
-      <img src="ruta/a/tu/imagen3.png" alt="Descripción de la imagen 3" width="200"/>
-    </td>
-  </tr>
-  <tr>
-    <td>Descripción 1</td>
-    <td>Descripción 2</td>
-    <td>Descripción 3</td>
-  </tr>
-</table>
+![program_2_6](imgPrograms/program_2_6.png)
+![program_4_1](imgPrograms/program_4_1.png)
+![program_4_2](imgPrograms/program_4_2.png)
+![program_4_3](imgPrograms/program_4_3.png)
+![program_4_4](imgPrograms/program_4_4.png)
+![program_5_1](imgPrograms/program_5_1.png)
+![program_6_1](imgPrograms/program_6_1.png)
 
 ---------------------------
 #### You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++, Third Edition by V. Scott Gordon and John Clevenger.
