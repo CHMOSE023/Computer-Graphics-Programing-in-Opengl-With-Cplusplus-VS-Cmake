@@ -1,7 +1,7 @@
 /*
 this class is not the same as the one in the book,
 I made some corrections in the functions to calculate
-the vertices and indices and i modified the variables's names
+the vertices and indices also i modified the variables's names
 */
 
 #pragma once
@@ -30,7 +30,6 @@ private:
 public:
 
     Torus(float innerRadius, float outerRadius, int sectors, int stacks);
-//    Torus(int innerRadius, int outerRadius, int sides, int rings);
     
     std::vector<unsigned int> getIndices();
     std::vector<glm::vec3> getVertices();
