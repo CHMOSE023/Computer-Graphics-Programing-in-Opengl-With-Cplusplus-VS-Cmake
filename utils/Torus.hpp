@@ -11,12 +11,14 @@ the vertices and indices and i modified the variables's names
 #include <iostream>
 #include <cmath>
 
-class Sphere {
+class Torus {
+    
 private:
-
-    float radius;
-    int sectorCount;
-    int stackCount;
+    
+    float innerRadius;
+    float outerRadius;
+    int sectors;
+    int stacks;
    
     std::vector<unsigned int> indices;
     std::vector<glm::vec3> vertices;
@@ -25,17 +27,16 @@ private:
 
     void buildVertices();
     void buildIndices();
-    float toRadians(float degrees);
-
 public:
-    Sphere(float radius, int sectorCount, int stackCount);
-    Sphere(int radius);
 
-    int getNumVertices();
-    int getNumIndices();
+    Torus(float innerRadius, float outerRadius, int sectors, int stacks);
+//    Torus(int innerRadius, int outerRadius, int sides, int rings);
     
     std::vector<unsigned int> getIndices();
     std::vector<glm::vec3> getVertices();
     std::vector<glm::vec3> getNormals();
     std::vector<glm::vec2> getTexCoords();
+
+    int getNumVertices();
+    int getNumIndices();
 };

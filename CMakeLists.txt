@@ -31,6 +31,8 @@ foreach(SOURCE_FILE ${SOURCE_FILES})
         ${UTILS_MAIN_DIR}/Utils.hpp
         ${UTILS_MAIN_DIR}/Sphere.cpp
         ${UTILS_MAIN_DIR}/Sphere.hpp
+        ${UTILS_MAIN_DIR}/Torus.cpp
+        ${UTILS_MAIN_DIR}/Torus.hpp
 
     )
 

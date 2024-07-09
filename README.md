@@ -29,10 +29,10 @@ This will build the project and compile all the programs located within the src 
 <table>
   <tr>
     <td>
-      <img src="imgPrograms/program_2_6.png" alt="program_2_6" style="width: 500px;"/>
+      <img src="gallery/program_2_6.png" alt="program_2_6" style="width: 500px;"/>
     </td>
     <td>
-      <img src="imgPrograms/program_4_1.png" alt="program_4_1" style="width: 500px;"/>
+      <img src="gallery/program_4_1.png" alt="program_4_1" style="width: 500px;"/>
     </td>
   </tr>
 </table>
@@ -40,10 +40,10 @@ This will build the project and compile all the programs located within the src 
 <table>
   <tr>
     <td>
-      <img src="imgPrograms/program_4_2.png" alt="program_4_2" style="width: 500px;"/>
+      <img src="gallery/program_4_2.png" alt="program_4_2" style="width: 500px;"/>
     </td>
     <td>
-      <img src="imgPrograms/program_4_3.png" alt="program_4_3" style="width: 500px;"/>
+      <img src="gallery/program_4_3.png" alt="program_4_3" style="width: 500px;"/>
     </td>
   </tr>
 </table>
@@ -51,19 +51,22 @@ This will build the project and compile all the programs located within the src 
 <table>
   <tr>
     <td>
-      <img src="imgPrograms/program_4_4.png" alt="program_4_4" style="width: 500px;"/>
+      <img src="gallery/program_4_4.png" alt="program_4_4" style="width: 500px;"/>
     </td>
     <td>
-      <img src="imgPrograms/program_5_1.png" alt="program_5_1" style="width: 500px;"/>
+      <img src="gallery/program_5_1.png" alt="program_5_1" style="width: 500px;"/>
     </td>
   </tr>
 </table>
 
 <table>
   <tr>
-    <td colspan="2">
-      <img src="imgPrograms/program_6_1.png" alt="program_6_1" style="width: 500px;"/>
+    <td>
+      <img src="gallery/program_6_1.png" alt="program_6_1" style="width: 500px;"/>
     </td>
+    <td>
+      <img src="gallery/program_6_2.png" alt="program_6_2" style="width: 500px;"/>
+    </td>    
   </tr>
 </table>
 
