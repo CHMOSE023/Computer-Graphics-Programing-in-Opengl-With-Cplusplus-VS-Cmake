@@ -27,7 +27,7 @@ float aspect;
 
 glm::mat4 pMat, vMat, mMat, mvMat;
 
-Torus myTorus(0.5f, 1.0f, 18, 36);  // Initialize a torus with inner radius 1.0, outer radius 0.5, 48 sides, and 48 rings
+Torus myTorus(0.5f, 1.0f, 36, 72);  // Initialize a torus with inner radius 1.0, outer radius 0.5, 48 sides, and 48 rings
 
 void setupVertices() {
 

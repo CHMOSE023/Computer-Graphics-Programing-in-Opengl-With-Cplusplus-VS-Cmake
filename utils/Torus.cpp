@@ -65,9 +65,6 @@ void Torus::buildIndices()
             indices.push_back(k2 + 1);
         }
     }
-
-    std::cout << "Indices: " << indices.size() << std::endl;
-    std::cout << "Vertices: " << vertices.size() << std::endl;
 }
 
 std::vector<unsigned int> Torus::getIndices() {
