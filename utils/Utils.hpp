@@ -1,11 +1,8 @@
-//#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
+#include "stlHeaders.hpp"
 #include <soil2/SOIL2.h>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>

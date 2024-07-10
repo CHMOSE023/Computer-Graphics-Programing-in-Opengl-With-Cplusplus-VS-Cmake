@@ -20,17 +20,19 @@ file(GLOB SOURCE_FILES ${SOURCE_MAIN_DIR}/*.cpp)
 
 set(OPTION ON)
 
-if(OPTION2)
+if(OPTION)
 
     set(UTILS_MAIN_DIR utils)
     
-    set(EXECUTABLE_NAME program_6_2)    
+    set(EXECUTABLE_NAME program_6_3)    
     add_executable(${EXECUTABLE_NAME}
         ${SOURCE_MAIN_DIR}/${EXECUTABLE_NAME}.cpp
         ${UTILS_MAIN_DIR}/Utils.cpp
         ${UTILS_MAIN_DIR}/Utils.hpp
-        ${UTILS_MAIN_DIR}/Torus.cpp
-        ${UTILS_MAIN_DIR}/Torus.hpp
+        ${UTILS_MAIN_DIR}/modelImporter.cpp
+        ${UTILS_MAIN_DIR}/modelImporter.hpp
+        #${UTILS_MAIN_DIR}/Torus.cpp
+        #${UTILS_MAIN_DIR}/Torus.hpp
     )
 
     target_link_libraries(${EXECUTABLE_NAME} glad glfw glm::glm soil2 ${OPENGL_LIBRARIES})
@@ -41,7 +43,8 @@ if(OPTION2)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex_shader61.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/fragment_shader61.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/texture/colorbrick.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/objectModels/cat.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/texture/Cat_diffuse.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
 
 
 else()
