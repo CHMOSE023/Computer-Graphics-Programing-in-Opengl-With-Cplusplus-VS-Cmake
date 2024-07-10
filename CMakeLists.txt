@@ -16,9 +16,10 @@ find_package(SOIL2 REQUIRED)
 
 set(SOURCE_MAIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SOURCE_TEXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/texture)
+set(SOURCE_MODELS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/models)
 file(GLOB SOURCE_FILES ${SOURCE_MAIN_DIR}/*.cpp)
 
-set(OPTION ON)
+option(OPTION "compile just one programan" ON)
 
 if(OPTION)
 
@@ -27,15 +28,9 @@ if(OPTION)
     set(EXECUTABLE_NAME program_6_3)    
     add_executable(${EXECUTABLE_NAME}
         ${SOURCE_MAIN_DIR}/${EXECUTABLE_NAME}.cpp
-        ${UTILS_MAIN_DIR}/Utils.cpp
-        ${UTILS_MAIN_DIR}/Utils.hpp
-        ${UTILS_MAIN_DIR}/modelImporter.cpp
-        ${UTILS_MAIN_DIR}/modelImporter.hpp
-        #${UTILS_MAIN_DIR}/Torus.cpp
-        #${UTILS_MAIN_DIR}/Torus.hpp
     )
 
-    target_link_libraries(${EXECUTABLE_NAME} glad glfw glm::glm soil2 ${OPENGL_LIBRARIES})
+    target_link_libraries(${EXECUTABLE_NAME} glad utilities glfw  glm::glm soil2 ${OPENGL_LIBRARIES})
 
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/programs
@@ -43,7 +38,7 @@ if(OPTION)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex_shader61.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/fragment_shader61.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/objectModels/cat.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/models/cat.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/texture/Cat_diffuse.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
 
 
@@ -58,7 +53,7 @@ else()
         )
 
         target_link_libraries(${SOURCE_FILE_NAME} PRIVATE glad glfw glm::glm soil2 ${OPENGL_LIBRARIES} utilities)
-
+        
         set_target_properties(${SOURCE_FILE_NAME} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/programs
         )
@@ -74,6 +69,13 @@ else()
         foreach(FILE ${ALL_FILES})
             file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
         endforeach()
+ 
+        # Copy texture files to the same directory as the executable
+        file(GLOB ALL_FILES "${SOURCE_MODELS_DIR}/*")
+        foreach(FILE ${ALL_FILES})
+            file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+        endforeach()
+        
     endforeach()
 endif()
 

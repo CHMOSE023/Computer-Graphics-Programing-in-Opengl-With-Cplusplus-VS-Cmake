@@ -1,4 +1,4 @@
-#include "Torus.hpp"
+#include <Torus.hpp>
 
 Torus::Torus(float innerRadius, float outerRadius, int sectors, int stacks){
     this->innerRadius = innerRadius;

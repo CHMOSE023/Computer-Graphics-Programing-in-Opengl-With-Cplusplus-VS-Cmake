@@ -5,7 +5,7 @@
 #include <string>
 #include <cmath>
 #include <glm/glm.hpp>
-#include "../utils/Utils.hpp"
+#include <Utils.hpp>
 using namespace std;
 
 #define numVAOs 1

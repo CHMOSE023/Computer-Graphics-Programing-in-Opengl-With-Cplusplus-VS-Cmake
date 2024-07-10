@@ -1,6 +1,6 @@
 #pragma once
 
-#include "stlHeaders.hpp"
+#include "../private/stlHeaders.hpp"
 
 class ModelImporter {
 private:
