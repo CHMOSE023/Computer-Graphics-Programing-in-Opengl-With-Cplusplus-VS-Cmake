@@ -7,10 +7,7 @@ the vertices and indices and i modified the variables's names
 #pragma once
 
 #include <glm/glm.hpp>
-#include <vector>
-#include <iostream>
-#include <cmath>
-
+#include "stlHeaders.hpp"
 class Sphere {
 private:
 

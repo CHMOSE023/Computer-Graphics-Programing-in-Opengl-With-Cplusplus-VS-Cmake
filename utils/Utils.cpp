@@ -1,13 +1,4 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <cmath>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
+//#include <glad/glad.h>
 #include "Utils.hpp"
 
 using namespace std;
