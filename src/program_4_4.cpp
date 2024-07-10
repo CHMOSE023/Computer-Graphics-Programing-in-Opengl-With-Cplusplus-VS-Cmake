@@ -5,7 +5,7 @@
 #include <string>
 #include <cmath>
 #include <glm/glm.hpp>
-#include "../utils/Utils.hpp"
+#include <Utils.hpp>
 #include <stack>
 
 using namespace std;

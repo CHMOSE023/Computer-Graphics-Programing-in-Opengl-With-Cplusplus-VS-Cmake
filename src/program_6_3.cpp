@@ -1,12 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "../utils/Utils.hpp"
-#include "../utils/modelImporter.hpp"
+#include <Utils.hpp>
+#include <modelImporter.hpp>
 
 using namespace std;
 
@@ -30,7 +28,7 @@ glm::mat4 pMat, vMat, mMat, mvMat;
 int numVertices;
 
 void setupVertices() {
-
+    
     ModelImporter model;
     model.parseObjFile("cat.obj");
     numVertices = model.getNumVertices();

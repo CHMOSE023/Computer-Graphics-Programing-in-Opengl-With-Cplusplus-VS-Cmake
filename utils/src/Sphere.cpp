@@ -1,4 +1,4 @@
-#include"Sphere.hpp"
+#include <Sphere.hpp>
 
 Sphere::Sphere(float radius, int sectorCount, int stackCount) {
 

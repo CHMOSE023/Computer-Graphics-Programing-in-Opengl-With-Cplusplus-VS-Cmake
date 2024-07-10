@@ -1,19 +1,22 @@
 /*
 this class is not the same as the one in the book,
 I made some corrections in the functions to calculate
-the vertices and indices and i modified the variables's names
+the vertices and indices also i modified the variables's names
 */
 
 #pragma once
 
 #include <glm/glm.hpp>
-#include "stlHeaders.hpp"
-class Sphere {
-private:
+#include "../private/stlHeaders.hpp"
 
-    float radius;
-    int sectorCount;
-    int stackCount;
+class Torus {
+    
+private:
+    
+    float innerRadius;
+    float outerRadius;
+    int sectors;
+    int stacks;
    
     std::vector<unsigned int> indices;
     std::vector<glm::vec3> vertices;
@@ -22,17 +25,15 @@ private:
 
     void buildVertices();
     void buildIndices();
-    float toRadians(float degrees);
-
 public:
-    Sphere(float radius, int sectorCount, int stackCount);
-    Sphere(int radius);
 
-    int getNumVertices();
-    int getNumIndices();
+    Torus(float innerRadius, float outerRadius, int sectors, int stacks);
     
     std::vector<unsigned int> getIndices();
     std::vector<glm::vec3> getVertices();
     std::vector<glm::vec3> getNormals();
     std::vector<glm::vec2> getTexCoords();
+
+    int getNumVertices();
+    int getNumIndices();
 };
