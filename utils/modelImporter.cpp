@@ -31,22 +31,77 @@ void ModelImporter::parseObjFile(const char* path) {
             normVals.push_back(nx);
             normVals.push_back(ny);
             normVals.push_back(nz);
-        } else if (prefix == "f") {
-            unsigned int vertIdx[3], texIdx[3], normIdx[3];
+        }
+        else if (prefix == "f")
+        {
+            std::vector<unsigned int> vertIdx, texIdx, normIdx;
             char slash;
-            for (int i = 0; i < 3; ++i) {
-                ss >> vertIdx[i] >> slash >> texIdx[i] >> slash >> normIdx[i];
-                // OBJ files are 1-indexed, adjust for 0-indexing in vectors
-                triangleVerts.push_back(vertVals[(vertIdx[i] - 1) * 3]);
-                triangleVerts.push_back(vertVals[(vertIdx[i] - 1) * 3 + 1]);
-                triangleVerts.push_back(vertVals[(vertIdx[i] - 1) * 3 + 2]);
+            std::string vertex;
 
-                textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2]);
-                textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2 + 1]);
+            // Leer todos los vértices de la cara
+            while (ss >> vertex)
+            {
+                std::stringstream vertexSS(vertex);
+                unsigned int vIdx, tIdx, nIdx;
+                vertexSS >> vIdx >> slash >> tIdx >> slash >> nIdx;
 
-                normals.push_back(normVals[(normIdx[i] - 1) * 3]);
-                normals.push_back(normVals[(normIdx[i] - 1) * 3 + 1]);
-                normals.push_back(normVals[(normIdx[i] - 1) * 3 + 2]);
+                vertIdx.push_back(vIdx);
+                texIdx.push_back(tIdx);
+                normIdx.push_back(nIdx);
+            }
+
+            // Comprobar si la cara tiene más de tres vértices (cuadrilátero)
+            if (vertIdx.size() == 4)
+            {
+                unsigned int tri1[3] = {vertIdx[0], vertIdx[1], vertIdx[2]};
+                unsigned int tri2[3] = {vertIdx[0], vertIdx[2], vertIdx[3]};
+
+                // Primer triángulo
+                for (int i = 0; i < 3; ++i)
+                {
+                    triangleVerts.push_back(vertVals[(tri1[i] - 1) * 3]);
+                    triangleVerts.push_back(vertVals[(tri1[i] - 1) * 3 + 1]);
+                    triangleVerts.push_back(vertVals[(tri1[i] - 1) * 3 + 2]);
+
+                    textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2]);
+                    textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2 + 1]);
+
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3]);
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3 + 1]);
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3 + 2]);
+                }
+
+                // Segundo triángulo
+                for (int i = 0; i < 3; ++i)
+                {
+                    triangleVerts.push_back(vertVals[(tri2[i] - 1) * 3]);
+                    triangleVerts.push_back(vertVals[(tri2[i] - 1) * 3 + 1]);
+                    triangleVerts.push_back(vertVals[(tri2[i] - 1) * 3 + 2]);
+
+                    textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2]);
+                    textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2 + 1]);
+
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3]);
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3 + 1]);
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3 + 2]);
+                }
+            }
+            else
+            {
+                // Cara triangular
+                for (int i = 0; i < 3; ++i)
+                {
+                    triangleVerts.push_back(vertVals[(vertIdx[i] - 1) * 3]);
+                    triangleVerts.push_back(vertVals[(vertIdx[i] - 1) * 3 + 1]);
+                    triangleVerts.push_back(vertVals[(vertIdx[i] - 1) * 3 + 2]);
+
+                    textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2]);
+                    textureCoords.push_back(texCoordVals[(texIdx[i] - 1) * 2 + 1]);
+
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3]);
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3 + 1]);
+                    normals.push_back(normVals[(normIdx[i] - 1) * 3 + 2]);
+                }
             }
         }
     }
