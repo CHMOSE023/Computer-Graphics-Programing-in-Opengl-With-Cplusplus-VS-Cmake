@@ -19,13 +19,14 @@ set(SOURCE_TEXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/texture)
 set(SOURCE_MODELS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/models)
 file(GLOB SOURCE_FILES ${SOURCE_MAIN_DIR}/*.cpp)
 
-option(OPTION "compile just one programan" ON)
+option(OPTION "compile all programans" ON)
 
-if(OPTION)
+#To compile only one program, specify the name of the program and its dependency files.
+if(NOT OPTION)
 
     set(UTILS_MAIN_DIR utils)
-    
-    set(EXECUTABLE_NAME program_6_3)    
+    # here you can add the name of the program you want to compile
+    set(EXECUTABLE_NAME program_7_1)    
     add_executable(${EXECUTABLE_NAME}
         ${SOURCE_MAIN_DIR}/${EXECUTABLE_NAME}.cpp
     )
@@ -35,11 +36,12 @@ if(OPTION)
     set_target_properties(${EXECUTABLE_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/programs
     )
-
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex_shader61.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/fragment_shader61.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    #here you can add the name of the files you want to copy to the same directory as the executable
+    #this is necessary for the program to run correctly
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex_shader71.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/fragment_shader71.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/models/cat.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/texture/Cat_diffuse.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/texture/colorbrick.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
 
 
 else()
