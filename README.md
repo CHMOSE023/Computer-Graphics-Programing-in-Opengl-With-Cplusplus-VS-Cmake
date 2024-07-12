@@ -21,7 +21,7 @@ cmake ..
 make
 ```
 
-This will build the project and compile all the programs located within the src folder. If you don't want to compile all the programs, you can comment out the foreach block in the CMakeLists.txt file and create an executable for the specific program you are interested in compiling, keep in mind that you must specify the correct path to the GLS files or any other files necessary for the program's execution.
+This will build the project and compile all the programs located inside the src folder. If you do not want to compile all programs, you can use -DOPTION=OFF and specify inside the CMakeLists.txt file the program you want to compile and specify the files needed to run the program.
 
 ---------------------------
 # Programs Gallery
