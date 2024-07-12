@@ -29,8 +29,8 @@ void main(void) {
     vec4 color;
 
     vec4 P = mv_matrix * vec4(vertPos, 1.0);
-    vec3 N = normalize(vec3(norm_matrix * vec4(vertNormal, 0.0)).xyz);
-    vec3 L = normalize(vec3(light.position - P.xyz));
+    vec3 N = normalize((norm_matrix * vec4(vertNormal, 1.0)).xyz);
+    vec3 L = normalize((light.position - P.xyz));
 
     vec3 V = normalize(-P.xyz);
 

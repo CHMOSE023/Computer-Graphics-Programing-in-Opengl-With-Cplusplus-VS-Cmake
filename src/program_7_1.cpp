@@ -115,7 +115,7 @@ void init(GLFWwindow *window) {
 
     pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
 
-    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 6.0f;
 
     worldTexture = Utils::loadTexture("colorbrick.jpg");
 
@@ -137,11 +137,11 @@ void display(GLFWwindow *window, double currentTime) {
 
     // Aplicar la rotación de 45 grados alrededor del eje Y
     float angle = glm::radians(45.0f);
-    //mMat = glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
-    mMat = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f));
+    mMat = glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
+    //mMat = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f));
     
-    //currentLightPos = glm::vec3(initialLightLoc.x * cos(currentTime), initialLightLoc.y, initialLightLoc.z * sin(currentTime));
-    currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
+    currentLightPos = glm::vec3(initialLightLoc.x * cos(currentTime), initialLightLoc.y, initialLightLoc.z * sin(currentTime));
+    //currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
     installLights(vMat);
     
     mvMat = vMat * mMat;
@@ -158,7 +158,7 @@ void display(GLFWwindow *window, double currentTime) {
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0); // link the texture attributes with the buffer data
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // link the texture attributes with the buffer data
     glEnableVertexAttribArray(1);
 
     glEnable(GL_CULL_FACE);
@@ -182,7 +182,7 @@ int main(void) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(1080, 720, "program_6_2", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_1", NULL, NULL);
     if (!window) {
         std::cerr << "ERROR: GLFW window could not be created" << std::endl;
         glfwTerminate();
