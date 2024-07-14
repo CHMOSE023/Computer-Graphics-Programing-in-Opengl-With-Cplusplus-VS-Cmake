@@ -81,6 +81,16 @@ This will build the project and compile all the programs located inside the src 
   </tr>
 </table>
 
+<table>
+  <tr>
+    <td>
+      <img src="gallery/program_7_2.png" alt="program_7_2" style="width: 500px;"/>
+    </td>
+    <td>
+    </td>    
+  </tr>
+</table>
+
 ---------------------------
 #### You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++, Third Edition by V. Scott Gordon and John Clevenger.
 
