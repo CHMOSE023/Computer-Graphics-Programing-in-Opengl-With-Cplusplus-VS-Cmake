@@ -104,7 +104,7 @@ void setupVertices() {
 
 void init(GLFWwindow *window) {
     
-    renderingProgram = Utils::createShaderProgram("vertex_shader71.glsl", "fragment_shader71.glsl");
+    renderingProgram = Utils::createShaderProgram("vertex_shader72.glsl", "fragment_shader72.glsl");
 
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;
@@ -248,10 +248,6 @@ void installLights(glm::mat4 v_matrix) {
     glProgramUniform4fv(renderingProgram, mDiffLoc, 1, matDif);
     glProgramUniform4fv(renderingProgram, mSpecLoc, 1, matSpe);
     glProgramUniform1f(renderingProgram, mShiLoc, matShi);
-
-
-
-
 
 }
 
