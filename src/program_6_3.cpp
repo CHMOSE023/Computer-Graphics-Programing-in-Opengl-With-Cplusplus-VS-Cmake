@@ -30,12 +30,15 @@ int numVertices;
 void setupVertices() {
     
     ModelImporter model;
-    model.parseObjFile("cat.obj");
+    model.parseObjFile("Skull.obj");
     numVertices = model.getNumVertices();
 
     std::vector<float> catVertices = model.getVertices();
 
     std::vector<float> tvalues = model.getTexCoords();
+
+    std::cout << "Number of vertices: " << numVertices << std::endl;
+    std::cout << "Number of normals: " << model.getNormals().size() << std::endl;
 
     glGenVertexArrays(numVAOs, vao);
     glBindVertexArray(vao[0]);
