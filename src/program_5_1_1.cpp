@@ -85,7 +85,7 @@ void init(GLFWwindow *window) {
     cameraX = 0.0f; cameraY = 0.0f; cameraZ = 6.0f;
     pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 2.0f;
     
-    brickTexture = Utils::loadTexture("foto.png");
+    brickTexture = Utils::loadTexture("brick.png");
 
     setupVertices();
 }
