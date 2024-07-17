@@ -26,7 +26,7 @@ if(NOT OPTION)
 
     set(UTILS_MAIN_DIR utils)
     # here you can add the name of the program you want to compile
-    set(EXECUTABLE_NAME program_7_2)    
+    set(EXECUTABLE_NAME program_7_4)    
     add_executable(${EXECUTABLE_NAME}
         ${SOURCE_MAIN_DIR}/${EXECUTABLE_NAME}.cpp
     )
@@ -40,7 +40,7 @@ if(NOT OPTION)
     #this is necessary for the program to run correctly
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/vertex_shader72.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/fragment_shader72.glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/models/cat.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/models/Skull.obj DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/texture/colorbrick.jpg DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
 
 

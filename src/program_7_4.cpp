@@ -80,7 +80,7 @@ void setupVertices() {
 
 void init(GLFWwindow *window) {
     
-    renderingProgram = Utils::createShaderProgram("vertex_shader73.glsl", "fragment_shader73.glsl");
+    renderingProgram = Utils::createShaderProgram("vertex_shader72.glsl", "fragment_shader72.glsl");
 
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;
@@ -110,9 +110,12 @@ void display(GLFWwindow *window, double currentTime) {
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
 
     // Aplicar la rotación de 45 grados alrededor del eje Y
-    float angle = glm::radians(90.0f);
+    float angle1 = glm::radians(90.0f);
+    float angle2 = glm::radians(35.0f);
+
     //mMat = glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
-    mMat = glm::rotate(glm::mat4(1.0f), -(float)angle, glm::vec3(1.0f, 0.0f, 0.0f));
+    mMat = glm::rotate(glm::mat4(1.0f), -(float)angle1, glm::vec3(1.0f, 0.0f, 0.0f));
+    //mMat = glm::rotate(glm::mat4(1.0f), -(float)angle2, glm::vec3(0.0f, 0.0f, 1.0f));
     
     //currentLightPos = glm::vec3(initialLightLoc.x * cos(currentTime), initialLightLoc.y, initialLightLoc.z * sin(currentTime));
     currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
