@@ -2,6 +2,9 @@
 
 layout(location = 0) in vec3 vertPos;
 layout(location = 1) in vec3 vertNormal;
+
+
+
 out vec4 varyingColor;
 out vec3 varyingNormal;
 out vec3 varyingLightDir;
