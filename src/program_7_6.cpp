@@ -58,7 +58,7 @@ void setupVertices() {
 
     std::vector<float> skullVertices = skull.getVertices();
     std::vector<float> normals = skull.getNormals();
-    //std::vector<float> textures = skull.getTexCoords();
+    std::vector<float> textures = skull.getTexCoords();
 
     //std::cout << "Vertices: " << numVertices << std::endl;
     //std::cout << "Normals: " << skullVertices.size() << std::endl;
@@ -77,15 +77,15 @@ void setupVertices() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
     glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), &normals[0], GL_STATIC_DRAW);
 
-    // Configurar VBO para las coordenadas de las texturas
-   // glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-   // glBufferData(GL_ARRAY_BUFFER, textures.size() * sizeof(float), &textures[0], GL_STATIC_DRAW);
+    //Configurar VBO para las coordenadas de las texturas
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+    glBufferData(GL_ARRAY_BUFFER, textures.size() * sizeof(float), &textures[0], GL_STATIC_DRAW);
 
 }
 
 void init(GLFWwindow *window) {
     
-    renderingProgram = Utils::createShaderProgram("vertex_shader73.glsl", "fragment_shader73.glsl");
+    renderingProgram = Utils::createShaderProgram("vertex_shader74.glsl", "fragment_shader74.glsl");
 
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;
@@ -97,6 +97,9 @@ void init(GLFWwindow *window) {
     pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
 
     cameraX = 0.0f; cameraY = 10.0f; cameraZ = 40.0f;
+
+    worldTexture = Utils::loadTexture("Skull.jpg");
+
 
     setupVertices();
 }
@@ -142,6 +145,10 @@ void display(GLFWwindow *window, double currentTime) {
     glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // link the texture attributes with the buffer data
     glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0); // link the texture attributes with the buffer data
+    glEnableVertexAttribArray(2);
 
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);

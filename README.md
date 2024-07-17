@@ -91,16 +91,27 @@ This will build the project and compile all the programs located inside the src 
     </td>    
   </tr>
 </table>
+
 <table>
   <tr>
     <td>
       <img src="gallery/program_7_4.png" alt="program_7_2" style="width: 500px;"/>
     </td>
     <td>
+      <img src="gallery/program_7_5.png" alt="program_7_2" style="width: 500px;"/>
     </td>    
   </tr>
 </table>
 
+<table>
+  <tr>
+    <td>
+      <img src="gallery/program_7_6.png" alt="program_7_2" style="width: 500px;"/>
+    </td>
+    <td>
+    </td>    
+  </tr>
+</table>
 
 
 ---------------------------

@@ -6,12 +6,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <Utils.hpp>
-#include <modelImporter.hpp>
+#include <Torus.hpp>
 
 void installLights(glm::mat4 v_matrix);
 
 #define numVAOs 1
-#define numVBOs 3  //changed from 2 to 3
+#define numVBOs 4  //changed from 2 to 3
 
 float cameraX, cameraY, cameraZ;
 
@@ -48,21 +48,40 @@ float* matDif = Utils::goldDiffuse();
 float* matSpe = Utils::goldSpecular();
 float matShi = Utils::goldShininess();
 
-int numVertices;
+Torus myTorus(0.5f, 1.0f, 36, 72);  // Initialize a torus with inner radius 1.0, outer radius 0.5, 48 sides, and 48 rings
 
 void setupVertices() {
 
-    ModelImporter skull;
-    skull.parseObjFile("Skull.obj");
-    numVertices = skull.getNumVertices();
+    std::vector<unsigned int> ind = myTorus.getIndices();
+    std::vector<glm::vec3> vert = myTorus.getVertices();
+    std::vector<glm::vec2> texCoords = myTorus.getTexCoords();
+    std::vector<glm::vec3> normals = myTorus.getNormals();
 
-    std::vector<float> skullVertices = skull.getVertices();
-    std::vector<float> normals = skull.getNormals();
-    //std::vector<float> textures = skull.getTexCoords();
+    // Crear un vector para almacenar los datos de vértices
+    std::vector<float> pvalues;
+    for (const auto& v : vert) {
+        pvalues.push_back(v.x);
+        pvalues.push_back(v.y);
+        pvalues.push_back(v.z);
+    }
 
-    //std::cout << "Vertices: " << numVertices << std::endl;
-    //std::cout << "Normals: " << skullVertices.size() << std::endl;
-    //std::cout << "Normals: " << normals.size() << std::endl;
+    // Crear un vector para almacenar los datos de coordenadas de textura
+    std::vector<float> tvalues;
+    for (const auto& t : texCoords) {
+        tvalues.push_back(t.s);
+        tvalues.push_back(t.t);
+    }
+    
+    // Crear un vector para almacenar los datos de normales
+    std::vector<float> nvalues;
+    for (const auto& n : normals) {
+        nvalues.push_back(n.x);
+        nvalues.push_back(n.y);
+        nvalues.push_back(n.z);
+    }
+
+    int numVertices = myTorus.getNumVertices();
+    int numIndices = myTorus.getNumIndices();
 
     glGenVertexArrays(numVAOs, vao);
     glBindVertexArray(vao[0]);
@@ -71,21 +90,24 @@ void setupVertices() {
 
     // Configurar VBO para los vértices
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, skullVertices.size()  * sizeof(float), &skullVertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, pvalues.size() * sizeof(float), &pvalues[0], GL_STATIC_DRAW);
+
+    // Configurar VBO para los índices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[1]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * sizeof(unsigned int), &ind[0], GL_STATIC_DRAW);
 
     // Configurar VBO para las coordenadas de las normales
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), &normals[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+    glBufferData(GL_ARRAY_BUFFER, nvalues.size() * sizeof(float), &nvalues[0], GL_STATIC_DRAW);
 
-    // Configurar VBO para las coordenadas de las texturas
-   // glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-   // glBufferData(GL_ARRAY_BUFFER, textures.size() * sizeof(float), &textures[0], GL_STATIC_DRAW);
-
+    // Configurar VBO para las coordenadas de textura
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+    glBufferData(GL_ARRAY_BUFFER, tvalues.size() * sizeof(float), &tvalues[0], GL_STATIC_DRAW);
 }
 
 void init(GLFWwindow *window) {
     
-    renderingProgram = Utils::createShaderProgram("vertex_shader73.glsl", "fragment_shader73.glsl");
+    renderingProgram = Utils::createShaderProgram("vertex_shader74.glsl", "fragment_shader74.glsl");
 
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;
@@ -96,7 +118,9 @@ void init(GLFWwindow *window) {
 
     pMat = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 50.0f);
 
-    cameraX = 0.0f; cameraY = 10.0f; cameraZ = 40.0f;
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 6.0f;
+
+    worldTexture = Utils::loadTexture("colorbrick.jpg");
 
     setupVertices();
 }
@@ -115,12 +139,9 @@ void display(GLFWwindow *window, double currentTime) {
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
 
     // Aplicar la rotación de 45 grados alrededor del eje Y
-    float angle1 = glm::radians(90.0f);
-    float angle2 = glm::radians(35.0f);
-
+    float angle = glm::radians(-45.0f);
     //mMat = glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
-    mMat = glm::rotate(glm::mat4(1.0f), -(float)angle1, glm::vec3(1.0f, 0.0f, 0.0f));
-    //mMat = glm::rotate(glm::mat4(1.0f), -(float)angle2, glm::vec3(0.0f, 0.0f, 1.0f));
+    mMat = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f));
     
     //currentLightPos = glm::vec3(initialLightLoc.x * cos(currentTime), initialLightLoc.y, initialLightLoc.z * sin(currentTime));
     currentLightPos = glm::vec3(initialLightLoc.x, initialLightLoc.y, initialLightLoc.z);
@@ -139,17 +160,23 @@ void display(GLFWwindow *window, double currentTime) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); // link the vertex attributes with the buffer data
     glEnableVertexAttribArray(0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // link the texture attributes with the buffer data
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0); // link the normal attributes with the buffer data
     glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0); // link the texture attributes with the buffer data
+    glEnableVertexAttribArray(2);
 
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, worldTexture);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    glDrawArrays(GL_TRIANGLES, 0, numVertices);
+    glDrawElements(GL_TRIANGLES, myTorus.getNumIndices(), GL_UNSIGNED_INT, 0);
 }
 
 int main(void) {
@@ -162,7 +189,7 @@ int main(void) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_3", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_1", NULL, NULL);
     if (!window) {
         std::cerr << "ERROR: GLFW window could not be created" << std::endl;
         glfwTerminate();
