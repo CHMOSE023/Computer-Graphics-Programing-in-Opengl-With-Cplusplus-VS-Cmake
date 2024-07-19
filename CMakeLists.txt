@@ -2,21 +2,24 @@ cmake_minimum_required(VERSION 3.25)
 
 project(graphics VERSION 2.0.1 LANGUAGES CXX)
 
-set(LIBRARIES_DIR libs/glad)
-set(LIBRARIE_UTILS_DIR utils)
-set(LIBRARIES glad)
+set(LIBRARIES_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/glad
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/soild2
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils
+)
 
-add_subdirectory(${LIBRARIES_DIR})
-add_subdirectory(${LIBRARIE_UTILS_DIR})
+foreach(dir ${LIBRARIES_DIR})
+    add_subdirectory(${dir})
+endforeach()
 
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(SOIL2 REQUIRED)
 
 set(SOURCE_MAIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SOURCE_TEXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/texture)
 set(SOURCE_MODELS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/models)
+
 file(GLOB SOURCE_FILES ${SOURCE_MAIN_DIR}/*.cpp)
 
 option(OPTION "compile all programans" ON)
@@ -54,7 +57,7 @@ else()
             ${SOURCE_FILE}
         )
 
-        target_link_libraries(${SOURCE_FILE_NAME} PRIVATE glad glfw glm::glm soil2 ${OPENGL_LIBRARIES} utilities)
+        target_link_libraries(${SOURCE_FILE_NAME} PRIVATE glad glfw glm::glm soil3 ${OPENGL_LIBRARIES} utilities)
         
         set_target_properties(${SOURCE_FILE_NAME} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/programs
