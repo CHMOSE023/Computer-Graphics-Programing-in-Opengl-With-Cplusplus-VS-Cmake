@@ -7,7 +7,7 @@ Since there is no official repository with the book's program code, I took it up
 - OpenGl
 - glfw3
 - glm
-- SOIL2
+
 
 1. clone the repository.
 ```sh

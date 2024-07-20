@@ -4,7 +4,6 @@ project(mi_proyecto)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(SOIL2 REQUIRED)
 
 set(MAIN_SOURCE_FILES 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sphere.cpp
@@ -29,5 +28,5 @@ target_link_libraries(utilities PRIVATE
     glfw
     glm::glm
     ${OPENGL_LIBRARIES}
-    soil2
+    soil3
 )

@@ -1,31 +1,15 @@
 cmake_minimum_required (VERSION 3.25)
 
-set(PROJECT_NAME
-    GLADlib
-)
-
-set(LIBRARY_NAME
-    glad
-)
-
-set(LIBRARY_HEADERS_DIR
-    include 
-)
+project(glad VERSION 1.0.0 LANGUAGES C)
 
 set(LIBRARY_HEADERS
-    ${LIBRARY_HEADERS_DIR}/glad/glad.h
-    ${LIBRARY_HEADERS_DIR}/KHR/khrplatform.h
-)
-
-set(LIBRARY_SOURCE_DIR
-    src
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/glad/glad.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/KHR/khrplatform.h
 )
 
 set(LIBRARY_SOURCE
-    ${LIBRARY_SOURCE_DIR}/glad.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/glad.c
 )
 
-project(${PROJECT_NAME} LANGUAGES C )
-
-add_library(${LIBRARY_NAME} SHARED ${LIBRARY_SOURCE})
-target_include_directories(${LIBRARY_NAME} PUBLIC ${LIBRARY_HEADERS_DIR} )
+add_library(glad SHARED ${LIBRARY_SOURCE})
+target_include_directories(glad PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
