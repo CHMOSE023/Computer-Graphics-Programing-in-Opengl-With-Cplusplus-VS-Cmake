@@ -1,10 +1,25 @@
-// Include necessary libraries
+//////////////////////////////////////////////////////////////////////
+//   the program creates window and draws a single point.           //
+//  initializes a shader program, and drwas a blue point in the     //
+//  center of the window. it uses a vertex array object (VAO)       //
+//  and defines a vertex and fragment shader.                       //
+//  during the main loop, it updates the window and continuously    //
+//  renders the point.                                              //
+//                                                                  //      
+//  you can find more information about how                         //
+//  this program works in the wiki of this repository.              //
+//                                                                  //      
+//  Francisco Zavala                                                //
+//  25/07/2024                                                      //
+//////////////////////////////////////////////////////////////////////
+
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 
 // Define the number of Vertex Array Objects (VAOs) to be used
-#define numVAOs 1
+#define numVAOs 1   // Number of VAOs
 GLuint renderingProgram; // ID for the shader program
 GLuint vao[numVAOs]; // Array to store the VAO IDs
 
@@ -62,32 +77,27 @@ void displaw(GLFWwindow* window, double currentTime){
     // Use the shader program
     glUseProgram(renderingProgram);
     // Set the point size
-    glPointSize(30.0f);
+    glPointSize(50.0f);
     // Draw a single point
     glDrawArrays(GL_POINTS, 0, 1);
 }
 
-// Main function
 int main(){
 
-    // Initialize GLFW
     if (!glfwInit())
     {
         std::cout << "Failed to initialize GLFW" << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    // Set the OpenGL version to 4.3 and the profile to core
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // Create a GLFW window
     GLFWwindow* window = glfwCreateWindow(1080, 720, "opengl_program_2_2", NULL, NULL);
-    // Make the window's context current
+    
     glfwMakeContextCurrent(window);
 
-    // Load the OpenGL function pointers using GLAD
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
         std::cout << "failed to initialize GLAD " << std::endl;
         return -1;
@@ -95,21 +105,21 @@ int main(){
 
     // Enable VSync
     glfwSwapInterval(1);
+    
     // Initialize the scene
     init(window);
     
-    // Main loop
     while (!glfwWindowShouldClose(window))
     {
         // Render the scene
         displaw(window, glfwGetTime());
         // Swap buffers
         glfwSwapBuffers(window);
-        // Poll for and process events
         glfwPollEvents();
     }
-    // Clean up
+    
     glfwDestroyWindow(window);
     glfwTerminate();
+    
     exit(EXIT_SUCCESS);
 }
