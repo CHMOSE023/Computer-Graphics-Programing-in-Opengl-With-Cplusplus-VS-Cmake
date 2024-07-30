@@ -129,10 +129,7 @@ void display(GLFWwindow* window, double currentTime) {
     glClear(GL_COLOR_BUFFER_BIT);
     
     glUseProgram(renderingProgram);
-     
-   
-    glUseProgram(renderingProgram);
-    
+         
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
