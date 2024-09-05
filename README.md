@@ -1,5 +1,5 @@
 # Computer Graphics Programing in Opengl with c++ 
-Since there is no official repository with the book's program code, I took it upon myself to create this repository to help the book's readers access the code quickly and easily. 
+Computer Graphics Programming in OpenGL with C++. Since there is no official repository with the book's program code, I took it upon myself to create this repository to help the book's readers access the code quickly and easily. 
 
 ---------
 ## Build & Run
