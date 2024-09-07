@@ -29,7 +29,7 @@ Computer Graphics Programing in Opengl with C++. This will build the project and
 <table>
   <tr>
     <td>
-      <img src="gallery/program_2_6.png" alt="program_2_6" style="width: 500px;"/>
+      <img src="gallery/program_2_6.gif" alt="program_2_6" style="width: 500px;"/>
     </td>
     <td>
       <img src="gallery/program_4_1.png" alt="program_4_1" style="width: 500px;"/>
@@ -40,7 +40,7 @@ Computer Graphics Programing in Opengl with C++. This will build the project and
 <table>
   <tr>
     <td>
-      <img src="gallery/program_4_2.png" alt="program_4_2" style="width: 500px;"/>
+      <img src="gallery/program_4_2.gif" alt="program_4_2" style="width: 500px;"/>
     </td>
     <td>
       <img src="gallery/program_4_3.png" alt="program_4_3" style="width: 500px;"/>
@@ -51,7 +51,7 @@ Computer Graphics Programing in Opengl with C++. This will build the project and
 <table>
   <tr>
     <td>
-      <img src="gallery/program_4_4.png" alt="program_4_4" style="width: 500px;"/>
+      <img src="gallery/program_4_4.gif" alt="program_4_4" style="width: 500px;"/>
     </td>
     <td>
       <img src="gallery/program_5_1.png" alt="program_5_1" style="width: 500px;"/>
@@ -62,10 +62,10 @@ Computer Graphics Programing in Opengl with C++. This will build the project and
 <table>
   <tr>
     <td>
-      <img src="gallery/program_6_1.png" alt="program_6_1" style="width: 500px;"/>
+      <img src="gallery/program_6_1.gif" alt="program_6_1" style="width: 500px;"/>
     </td>
     <td>
-      <img src="gallery/program_6_2.png" alt="program_6_2" style="width: 500px;"/>
+      <img src="gallery/program_6_2.gif" alt="program_6_2" style="width: 500px;"/>
     </td>    
   </tr>
 </table>
