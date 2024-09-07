@@ -182,7 +182,9 @@ int main(void) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_1", NULL, NULL);
+    //GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_1", NULL, NULL);
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_7_1 ", nullptr, nullptr);    
     if (!window) {
         std::cerr << "ERROR: GLFW window could not be created" << std::endl;
         glfwTerminate();

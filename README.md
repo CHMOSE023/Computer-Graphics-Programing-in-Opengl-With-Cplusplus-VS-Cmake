@@ -29,9 +29,6 @@ Computer Graphics Programing in Opengl with C++. This will build the project and
 <table>
   <tr>
     <td>
-      <img src="gallery/program_2_6.gif" alt="program_2_6" style="width: 500px;"/>
-    </td>
-    <td>
       <img src="gallery/program_4_1.png" alt="program_4_1" style="width: 500px;"/>
     </td>
   </tr>

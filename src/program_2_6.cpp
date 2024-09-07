@@ -160,7 +160,9 @@ int main(void) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            
-    GLFWwindow* window = glfwCreateWindow(1080, 720, "opengl_program_2_6", nullptr, nullptr);
+    //GLFWwindow* window = glfwCreateWindow(1080, 720, "opengl_program_2_6", nullptr, nullptr);
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_2_6 ", nullptr, nullptr);    
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
