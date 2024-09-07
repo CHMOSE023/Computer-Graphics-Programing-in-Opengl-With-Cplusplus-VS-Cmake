@@ -1,5 +1,5 @@
 # Computer Graphics Programing in Opengl with c++ 
-Since there is no official repository with the book's program code, I took it upon myself to create this repository to help the book's readers access the code quickly and easily. 
+Computer Graphics Programming in OpenGL with C++. Since there is no official repository with the book's program code, I took it upon myself to create this repository to help the book's readers access the code quickly and easily. 
 
 ---------
 ## Build & Run
@@ -21,7 +21,7 @@ cmake ..
 make
 ```
 
-Computer Graphics Programing in Opengl with c++. This will build the project and compile all the programs located inside the src folder. If you do not want to compile all programs, you can use -DOPTION=OFF and specify inside the CMakeLists.txt file the program you want to compile and specify the files needed to run the program.
+Computer Graphics Programing in Opengl with C++. This will build the project and compile all the programs located inside the src folder. If you do not want to compile all programs, you can use -DOPTION=OFF and specify inside the CMakeLists.txt file the program you want to compile and specify the files needed to run the program.
 
 ---------------------------
 # Programs Gallery
