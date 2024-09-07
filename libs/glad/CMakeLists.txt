@@ -1,4 +1,5 @@
 cmake_minimum_required (VERSION 3.25)
+include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
 
 project(glad VERSION 1.0.0 LANGUAGES C)
 
@@ -11,5 +12,5 @@ set(LIBRARY_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/glad.c
 )
 
-add_library(glad SHARED ${LIBRARY_SOURCE})
+add_library(glad STATIC ${LIBRARY_SOURCE})
 target_include_directories(glad PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

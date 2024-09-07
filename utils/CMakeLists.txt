@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
+
+include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
+
 project(mi_proyecto)  
 
 find_package(glfw3 REQUIRED)
@@ -13,7 +16,7 @@ set(MAIN_SOURCE_FILES
 )
 
 
-add_library(utilities SHARED ${MAIN_SOURCE_FILES})
+add_library(utilities STATIC ${MAIN_SOURCE_FILES})
 
 # Directorios de inclusión públicos
 target_include_directories(utilities PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/public)

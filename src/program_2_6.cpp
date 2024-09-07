@@ -9,10 +9,13 @@
 GLuint renderingProgram;
 GLuint vao[numVAOs];
 
+float lastTime = 0.0f;  // this will store the last time the triangle was rendered
+
 // location of triangle on x axis
 float x = 0.0f;
 // offset for moving the triangle
-float inc = 0.01f;
+float inc = 0.5f;
+
 
 using namespace std;
 
@@ -135,18 +138,21 @@ void display(GLFWwindow* window, double currentTime) {
     
     glUseProgram(renderingProgram);
     
+    float deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
     // move the triangle along x axis
-    x += inc;
+    x += inc * deltaTime;
+    std::cout << x << std::endl;
     // switch to moving the triangle to the left
-    if (x > 1.0f) inc = -0.01f;
+    if (x > 1.0f) inc = -0.5f;
+    
     // switch to moving the triangle to the right
-    if (x < -1.0f) inc = 0.01f;
+    if (x < -1.0f) inc = 0.5f;
     
     // get ptr to "offset"
     GLuint offsetLoc = glGetUniformLocation(renderingProgram, "offset");
-    
-    glProgramUniform1f(renderingProgram, offsetLoc, x);
-    
+    glProgramUniform1f(renderingProgram, offsetLoc, x);    
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 

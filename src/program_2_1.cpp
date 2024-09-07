@@ -40,10 +40,10 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            
 
     //Create the window
-    GLFWwindow* window = glfwCreateWindow(1080, 720, "program_2_1", NULL, NULL);
+    //GLFWwindow* window = glfwCreateWindow(1080, 720, "program_2_1", NULL, NULL);
     
     //monitor properties
-    /*
+    
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_2_1 ", nullptr, nullptr);    
     std::cout << "width " <<mode->width <<std::endl;
@@ -52,7 +52,7 @@ int main() {
     std::cout << "blueBits " << mode->blueBits << std::endl;
     std::cout << "redBits " << mode->redBits<< std::endl;
     std::cout << "greenBits " << mode->greenBits << std::endl;
-    */   
+       
     
     if (!window) {
         glfwTerminate();
