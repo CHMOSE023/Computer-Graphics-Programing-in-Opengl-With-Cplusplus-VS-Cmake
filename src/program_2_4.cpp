@@ -69,8 +69,8 @@ std::string readShaderSource(const char *filePath) {
 GLuint createShaderProgram()
 {
     // Create vertex and fragment shaders
-    std::string vShaderStr = readShaderSource("./vertex_shader4.glsl");
-    std::string fShaderStr = readShaderSource("./fragment_shader4.glsl");
+    std::string vShaderStr = readShaderSource("./vertex_shader24.glsl");
+    std::string fShaderStr = readShaderSource("./fragment_shader24.glsl");
 
     const char *vShaderSrc = vShaderStr.c_str();
     const char *fShaderSrc = fShaderStr.c_str();

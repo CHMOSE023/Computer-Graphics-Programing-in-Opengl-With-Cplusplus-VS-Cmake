@@ -79,8 +79,8 @@ GLuint createShaderProgram() {
     GLint fragCompiled;
     GLint linked;
     
-    string vertShaderStr = readShaderSource("vertex_shader6.glsl");
-    string fragShaderStr = readShaderSource("fragment_shader6.glsl");
+    string vertShaderStr = readShaderSource("vertex_shader26.glsl");
+    string fragShaderStr = readShaderSource("fragment_shader26.glsl");
     
     const char* vertShaderSrc = vertShaderStr.c_str();
     const char* fragShaderSrc = fragShaderStr.c_str();
@@ -122,7 +122,6 @@ GLuint createShaderProgram() {
     return vfProgram;
 }
 
-
 void init (GLFWwindow* window) {
     renderingProgram = createShaderProgram();
     glGenVertexArrays(numVAOs, vao);
@@ -143,7 +142,6 @@ void display(GLFWwindow* window, double currentTime) {
 
     // move the triangle along x axis
     x += inc * deltaTime;
-    std::cout << x << std::endl;
     // switch to moving the triangle to the left
     if (x > 1.0f) inc = -0.5f;
     

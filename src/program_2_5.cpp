@@ -71,8 +71,8 @@ GLuint createShaderProgram() {
     GLint fragCompiled;
     GLint linked;
     
-    string vertShaderStr = readShaderSource("vertex_shader4.glsl");
-    string fragShaderStr = readShaderSource("fragment_shader4.glsl");
+    string vertShaderStr = readShaderSource("vertex_shader24.glsl");
+    string fragShaderStr = readShaderSource("fragment_shader24.glsl");
     
     const char* vertShaderSrc = vertShaderStr.c_str();
     const char* fragShaderSrc = fragShaderStr.c_str();
@@ -123,13 +123,12 @@ void init (GLFWwindow* window) {
 
 void display(GLFWwindow* window, double currentTime) {
     
-    // clear the background to black, each time
     glClear(GL_DEPTH_BUFFER_BIT);
     glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
     
     glUseProgram(renderingProgram);
-         
+    
+    // draw one triangle  
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
@@ -150,8 +149,6 @@ int main(void) {
 
     glfwMakeContextCurrent(window);
    
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
