@@ -126,7 +126,8 @@ int main(void) {
     }
 
     glfwMakeContextCurrent(window);
-   
+    glfwMaximizeWindow(window);
+ 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))

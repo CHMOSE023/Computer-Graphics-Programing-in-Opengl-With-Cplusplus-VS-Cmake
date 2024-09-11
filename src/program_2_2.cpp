@@ -70,6 +70,7 @@ void init(GLFWwindow *window)
     glGenVertexArrays(numVAOs, vao);
     // Bind the first VAO
     glBindVertexArray(vao[0]);
+
 }
 
 // Function to display the scene
@@ -96,8 +97,10 @@ int main(){
 
     //GLFWwindow* window = glfwCreateWindow(1080, 720, "opengl_program_2_2", NULL, NULL);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_2_2 ", nullptr, nullptr);    
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_2_2 ", NULL, NULL); 
     glfwMakeContextCurrent(window);
+    
+    glfwMaximizeWindow(window);
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
         std::cout << "failed to initialize GLAD " << std::endl;
