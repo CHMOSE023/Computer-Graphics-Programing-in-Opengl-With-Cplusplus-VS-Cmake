@@ -72,7 +72,7 @@ void setupVertices(void) {
 }
 
 void init(GLFWwindow *window) {    
-    renderingProgram = Utils::createShaderProgram("vertex_shader51.glsl", "fragment_shader51.glsl");
+    renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader51.glsl", "./shaders/fragment_shader51.glsl");
     
     if (Utils::checkOpenGLError()) {
         std::cout << "ERROR: Could not create the shader program" << std::endl;
@@ -85,7 +85,7 @@ void init(GLFWwindow *window) {
     cameraX = 0.0f; cameraY = 0.0f; cameraZ = 6.0f;
     pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 2.0f;
     
-    brickTexture = Utils::loadTexture("brick.png");
+    brickTexture = Utils::loadTexture("textures/brick.png");
 
     setupVertices();
 }

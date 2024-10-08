@@ -65,7 +65,8 @@ void setupVertices(void) {
 }
 
 void init (GLFWwindow *window){    
-    renderingProgram = Utils::createShaderProgram("vertex_shader43.glsl", "fragment_shader43.glsl");
+    renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader43.glsl",
+     "./shaders/fragment_shader43.glsl");
     
     if (Utils::checkOpenGLError()){
         std::cout << "ERROR: Could not create the shader program" << std::endl;

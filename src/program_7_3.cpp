@@ -104,7 +104,7 @@ void setupVertices() {
 
 void init(GLFWwindow *window) {
     
-    renderingProgram = Utils::createShaderProgram("vertex_shader73.glsl", "fragment_shader73.glsl");
+    renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader73.glsl", "./shaders/fragment_shader73.glsl");
 
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;
@@ -117,7 +117,7 @@ void init(GLFWwindow *window) {
 
     cameraX = 0.0f; cameraY = 0.0f; cameraZ = 6.0f;
 
-    worldTexture = Utils::loadTexture("colorbrick.jpg");
+    worldTexture = Utils::loadTexture("./textures/colorbrick.jpg");
 
     setupVertices();
 }

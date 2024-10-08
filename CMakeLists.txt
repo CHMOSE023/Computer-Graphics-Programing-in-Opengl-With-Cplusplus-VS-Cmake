@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
+include(${CMAKE_BINARY_DIR}/generators/conan_toolchain.cmake)
 
 project(graphics VERSION 2.0.1 LANGUAGES CXX)
 
@@ -20,8 +20,9 @@ find_package(glm REQUIRED)
 find_package(OpenGL REQUIRED)
 
 set(SOURCE_MAIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(SOURCE_TEXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/texture)
-set(SOURCE_MODELS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/models)
+set(SOURCE_TEXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/textures)
+set(SOURCE_MODELS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/models)
+set(SOURCE_SHADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders)
 
 file(GLOB SOURCE_FILES ${SOURCE_MAIN_DIR}/*.cpp)
 
@@ -54,6 +55,18 @@ if(NOT OPTION)
 
 
 else()
+    
+    set(RUNTIME_OUTPUT_DIRECTORY_PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/programs)
+    set(RUNTIME_OUTPUT_DIRECTORY_SHADERS ${CMAKE_CURRENT_BINARY_DIR}/programs/shaders)
+    set(RUNTIME_OUTPUT_DIRECTORY_TEXTURES ${CMAKE_CURRENT_BINARY_DIR}/programs/textures)
+    set(RUNTIME_OUTPUT_DIRECTORY_MODELS ${CMAKE_CURRENT_BINARY_DIR}/programs/models)
+
+    file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_PROGRAMS})
+    file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_SHADERS})
+    file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_TEXTURES})
+    file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_MODELS})
+
+
     foreach(SOURCE_FILE ${SOURCE_FILES})
         get_filename_component(SOURCE_FILE_NAME ${SOURCE_FILE} NAME_WE)
         
@@ -64,34 +77,29 @@ else()
         )
 
         target_link_libraries(${SOURCE_FILE_NAME} PRIVATE glad glfw glm::glm soil3 ${OPENGL_LIBRARIES} utilities)
-        #target_link_libraries(${SOURCE_FILE_NAME} PRIVATE glad glfw  ${OPENGL_LIBRARIES})
-
         
         set_target_properties(${SOURCE_FILE_NAME} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/programs
         )
 
         # Copy .glsl files to the same directory as the executable
-        file(GLOB GLSL_FILES "${SOURCE_MAIN_DIR}/*.glsl")
+        file(GLOB GLSL_FILES "${SOURCE_SHADERS_DIR}/*.glsl")
         foreach(GLSL_FILE ${GLSL_FILES})
-            file(COPY ${GLSL_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+            file(COPY ${GLSL_FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs/shaders)
         endforeach()
 
         # Copy texture files to the same directory as the executable
         file(GLOB ALL_FILES "${SOURCE_TEXTURE_DIR}/*")
         foreach(FILE ${ALL_FILES})
-            file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+            file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs/textures)
         endforeach()
  
         # Copy texture files to the same directory as the executable
         file(GLOB ALL_FILES "${SOURCE_MODELS_DIR}/*")
         foreach(FILE ${ALL_FILES})
-            file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs)
+            file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs/models)
         endforeach()
         
     endforeach()
 endif()
 
-
-#cmake -G "Ninja" -DCMAKE_TOOLCHAIN_FILE="conan_toolchain.cmake" -DCMAKE_BUILD_TYPE=Release ..
-#$ conan install . --output-folder=build --build=missing

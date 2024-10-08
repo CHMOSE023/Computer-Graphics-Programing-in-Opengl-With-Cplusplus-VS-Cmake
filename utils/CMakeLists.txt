@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
+include(${CMAKE_BINARY_DIR}/generators/conan_toolchain.cmake)
 
 project(mi_proyecto)  
 

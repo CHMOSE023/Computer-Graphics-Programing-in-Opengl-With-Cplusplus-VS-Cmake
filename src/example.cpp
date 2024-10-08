@@ -62,7 +62,7 @@ void setupVertices() {
 
 void init(GLFWwindow *window) {
     // Crea el programa de shaders usando los archivos de shaders especificados
-    renderingProgram = Utils::createShaderProgram("vertex_shader61.glsl", "fragment_shader61.glsl");
+    renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader61.glsl", "./shaders/fragment_shader61.glsl");
 
     // Verifica si hubo errores al crear el programa de shaders
     if (Utils::checkOpenGLError()) {

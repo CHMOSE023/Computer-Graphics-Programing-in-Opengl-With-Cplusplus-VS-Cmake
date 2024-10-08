@@ -30,7 +30,7 @@ int numVertices;
 void setupVertices() {
     
     ModelImporter model;
-    model.parseObjFile("cat.obj");
+    model.parseObjFile("./models/cat.obj");
     numVertices = model.getNumVertices();
 
     std::vector<float> catVertices = model.getVertices();
@@ -56,7 +56,7 @@ void setupVertices() {
 
 void init(GLFWwindow *window) {
     
-    renderingProgram = Utils::createShaderProgram("vertex_shader61.glsl", "fragment_shader61.glsl");
+    renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader61.glsl", "./shaders/fragment_shader61.glsl");
 
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;
@@ -69,7 +69,7 @@ void init(GLFWwindow *window) {
 
     cameraX = 0.0f; cameraY = 10.0f; cameraZ = 30.0f;
 
-    worldTexture = Utils::loadTexture("Cat_diffuse.jpg");
+    worldTexture = Utils::loadTexture("./textures/Cat_diffuse.jpg");
 
     setupVertices();
 }

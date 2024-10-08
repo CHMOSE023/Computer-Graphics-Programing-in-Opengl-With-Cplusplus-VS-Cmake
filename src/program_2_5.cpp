@@ -71,8 +71,8 @@ GLuint createShaderProgram() {
     GLint fragCompiled;
     GLint linked;
     
-    string vertShaderStr = readShaderSource("vertex_shader24.glsl");
-    string fragShaderStr = readShaderSource("fragment_shader24.glsl");
+    string vertShaderStr = readShaderSource("./shaders/vertex_shader24.glsl");
+    string fragShaderStr = readShaderSource("./shaders/fragment_shader24.glsl");
     
     const char* vertShaderSrc = vertShaderStr.c_str();
     const char* fragShaderSrc = fragShaderStr.c_str();

@@ -53,7 +53,7 @@ int numVertices;
 void setupVertices() {
 
     ModelImporter skull;
-    skull.parseObjFile("Skull.obj");
+    skull.parseObjFile("./models/Skull.obj");
     numVertices = skull.getNumVertices();
 
     std::vector<float> skullVertices = skull.getVertices();
@@ -85,7 +85,7 @@ void setupVertices() {
 
 void init(GLFWwindow *window) {
     
-    renderingProgram = Utils::createShaderProgram("vertex_shader73.glsl", "fragment_shader73.glsl");
+    renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader73.glsl", "./shaders/fragment_shader73.glsl");
 
     if (Utils::checkOpenGLError()) {
         std::cerr << "ERROR: Could not create the shader program" << std::endl;

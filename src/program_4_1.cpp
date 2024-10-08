@@ -51,8 +51,8 @@ void setupVertices(void) {
 
 void init (GLFWwindow *window){
     renderingProgram = Utils::createShaderProgram(
-        "vertex_shader41.glsl",
-        "fragment_shader41.glsl");
+        "./shaders/vertex_shader41.glsl",
+        "./shaders/fragment_shader41.glsl");
     if (Utils::checkOpenGLError()){
         std::cout << "ERROR: Could not create the shader program" << std::endl;
     }
@@ -102,6 +102,7 @@ int main(void) {
     //GLFWwindow* window = glfwCreateWindow(1080, 720, "opengl_program_4_1", nullptr, nullptr);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_4_1 ", nullptr, nullptr);    
+    
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
