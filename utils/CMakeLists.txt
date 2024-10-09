@@ -13,6 +13,10 @@ set(MAIN_SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Torus.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Utils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/modelImporter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshFactory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshTorus.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshPyramid.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshSphere.cpp
 )
 
 
