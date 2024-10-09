@@ -27,7 +27,7 @@ ModelImporter pyramid;
 Torus myTorus(0.6f, 1.0f, 36, 72);
 int numPyramidVertices, numTorusVertices, numTorusIndices;
 
-glm::vec3 torusLoc(2.2f, -0.6f, -1.6f);
+glm::vec3 torusLoc(2.2f, -0.6f, -0.8f);
 glm::vec3 pyrLoc(-1.0f, 0.1f, 0.3f);
 glm::vec3 cameraLoc(-2.0f, 1.2f, 8.0f);
 glm::vec3 lightLoc(-3.8f, 2.2f, 1.1f);
@@ -262,7 +262,8 @@ void passOne(void) {
 	// draw the torus
 
 	mMat = glm::translate(glm::mat4(1.0f), torusLoc);
-	mMat = glm::rotate(mMat, toRadians(20.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(105.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(25.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	shadowMVP1 = lightPmatrix * lightVmatrix * mMat;
 	sLoc = glGetUniformLocation(renderingProgram1, "shadowMVP");
@@ -322,8 +323,8 @@ void passTwo(void) {
 	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraLoc.x, -cameraLoc.y, -cameraLoc.z));
 
 	mMat = glm::translate(glm::mat4(1.0f), torusLoc);
-	mMat = glm::rotate(mMat, toRadians(95.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(105.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(25.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	currentLightPos = glm::vec3(lightLoc);
 	installLights(renderingProgram2, vMat);

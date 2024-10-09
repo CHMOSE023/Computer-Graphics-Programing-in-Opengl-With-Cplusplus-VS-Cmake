@@ -35,12 +35,11 @@ ModelImporter pyramid;
 Torus myTorus(0.6f, 1.0f, 36, 72);
 int numPyramidVertices, numTorusVertices, numTorusIndices;
 
-glm::vec3 torusLoc(-2.2f, -0.6f, -1.6f);
+glm::vec3 torusLoc(2.2f, -0.6f, -1.6f);
 glm::vec3 pyrLoc(-1.0f, 0.1f, 0.3f);
-
 glm::vec3 cameraLoc(-2.0f, 1.2f, 8.0f);
-
 glm::vec3 lightLoc(-3.8f, 2.2f, 1.1f);
+
 
 // white light
 float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 1.0f };
@@ -120,8 +119,10 @@ int main(void) {
 
     //GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_3", NULL, NULL);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_8_1 ", nullptr, nullptr);    
+	GLFWwindow* window = glfwCreateWindow(1920, 1080, "program_8_1", NULL, NULL);
  	//GLFWwindow* window = glfwCreateWindow(800, 800, "Chapter8 - program1", NULL, NULL);
+
+	//std::cout << " width: " << mode->width << " height: " << mode->height << std::endl;
    
 	if (!window) {
         std::cerr << "ERROR: GLFW window could not be created" << std::endl;
@@ -294,7 +295,7 @@ void setupVertices(void) {
 
     vertexPositions.clear();
 	ind.clear();
-	Sphere mySphere(0.5f, 36, 18);
+	Sphere mySphere(0.1f, 36, 18);
     ind = mySphere.getIndices();
     std::vector<glm::vec3> vertices = mySphere.getVertices();
     std::vector<glm::vec3> normals = mySphere.getNormals();
@@ -327,8 +328,8 @@ void setupShadowBuffers(GLFWwindow* window) {
 	glBindTexture(GL_TEXTURE_2D, shadowTex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32,
 		scSizeX, scSizeY, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 
@@ -378,7 +379,22 @@ void processInput(GLFWwindow *window) {
 
     // Mover hacia la derecha (D)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraLoc += glm::normalize(glm::cross(origin,up)) * cameraSpeed * deltaTime; 
+        cameraLoc += glm::normalize(glm::cross(origin,up)) * cameraSpeed * deltaTime;
+
+  
+    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+		lightLoc.z += 0.05f;
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+		lightLoc.z -= 0.05f;
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+		lightLoc.x += 0.05f;
+    if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
+		lightLoc.x -= 0.05f;
+    if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+		lightLoc.y += 0.05f;
+    if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+		lightLoc.y -= 0.05f;
+	
 }
 
 
@@ -390,15 +406,14 @@ void display(GLFWwindow* window, double currentTime) {
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	
 	currentLightPos = glm::vec3(lightLoc);
 
-    //actualizar la posición de la cámara
-
 	lightVmatrix = glm::lookAt(currentLightPos, origin, up);
-	lightPmatrix = glm::perspective(toRadians(60.0f), aspect, 0.1f, 1000.0f);
+    lightPmatrix =  glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowBuffer);
+	glViewport(0, 0, width, height);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowTex, 0);
 
 	glDrawBuffer(GL_NONE);
@@ -430,7 +445,7 @@ void passOne(void) {
 
 	// draw the torus
 	mMat = glm::translate(glm::mat4(1.0f), torusLoc);
-	mMat = glm::rotate(mMat, toRadians(20.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//mMat = glm::translate(mMat, glm::vec3(0.0f, 0.0f, -1.80f));
 
 	shadowMVP1 = lightPmatrix * lightVmatrix * mMat;
 	sLoc = glGetUniformLocation(renderingProgram1, "shadowMVP");
@@ -449,8 +464,8 @@ void passOne(void) {
 	mesPyramid->setupMesh();
 
 	mMat = glm::translate(glm::mat4(1.0f), pyrLoc);
-	mMat = glm::rotate(mMat, toRadians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+//	mMat = glm::rotate(mMat, toRadians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+//	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	shadowMVP1 = lightPmatrix * lightVmatrix * mMat;
 	glUniformMatrix4fv(sLoc, 1, GL_FALSE, glm::value_ptr(shadowMVP1));
@@ -462,6 +477,8 @@ void passOne(void) {
 	glDepthFunc(GL_LEQUAL);
 
 	mesPyramid->render();
+
+
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -485,11 +502,9 @@ void passTwo(void) {
 	thisSpe[0] = bMatSpe[0]; thisSpe[1] = bMatSpe[1]; thisSpe[2] = bMatSpe[2];
 	thisShi = bMatShi;
 
-    vMat = glm::lookAt(cameraLoc, cameraLoc + origin, up);
-	
+	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraLoc.x, -cameraLoc.y, -cameraLoc.z));
+
 	mMat = glm::translate(glm::mat4(1.0f), torusLoc);
-	mMat = glm::rotate(mMat, toRadians(95.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	currentLightPos = glm::vec3(lightLoc);
 	installLights(renderingProgram2, vMat);
@@ -521,8 +536,6 @@ void passTwo(void) {
 	thisShi = gMatShi;
 
 	mMat = glm::translate(glm::mat4(1.0f), pyrLoc);
-	mMat = glm::rotate(mMat, toRadians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	currentLightPos = glm::vec3(lightLoc);
 	installLights(renderingProgram2, vMat);
