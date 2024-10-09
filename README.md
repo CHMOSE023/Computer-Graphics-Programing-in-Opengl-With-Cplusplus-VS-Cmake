@@ -125,6 +125,7 @@ Computer Graphics Programming in OpenGl with C++. This will build the project an
       <img src="gallery/program_7_6.png" alt="program_7_2" style="width: 500px;"/>
     </td>
     <td>
+      <img src="gallery/program_8_1.png" alt="program_8_1" style="width: 500px;"/>
     </td>    
   </tr>
 </table>
