@@ -35,7 +35,7 @@ ModelImporter pyramid;
 Torus myTorus(0.6f, 1.0f, 36, 72);
 int numPyramidVertices, numTorusVertices, numTorusIndices;
 
-glm::vec3 torusLoc(2.2f, -0.6f, -1.6f);
+glm::vec3 torusLoc(2.2f, -0.6f, -0.8f);
 glm::vec3 pyrLoc(-1.0f, 0.1f, 0.3f);
 glm::vec3 cameraLoc(-2.0f, 1.2f, 8.0f);
 glm::vec3 lightLoc(-3.8f, 2.2f, 1.1f);
@@ -80,11 +80,12 @@ glm::vec3 currentLightPos, transformed;
 float lightPos[3];
 GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mambLoc, mdiffLoc, mspecLoc, mshiLoc;
 glm::vec3 origin(0.0f, 0.0f, 0.0f);
+glm::vec3 origin2(0.0f, 0.0f, -4.0f);
 glm::vec3 up(0.0f, 1.0f, 0.0f);
 
 
-float deltaTime = 0.0f; // Tiempo entre el frame actual y el anterior
-float lastFrame = 0.0f; // Tiempo del último frame
+float deltaTime = 0.1f; // Tiempo entre el frame actual y el anterior
+float lastFrame = 0.1f; // Tiempo del último frame
 float cameraSpeed = 2.5f; // Velocidad de movimiento de la cámara
 
 float Zoom = 45.0f;
@@ -163,6 +164,12 @@ int main(void) {
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
+    Zoom -= (float)yoffset;
+    if (Zoom < 1.0f)
+        Zoom = 1.0f;
+    if (Zoom > 45.0f)
+        Zoom = 45.0f;
+
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -171,6 +178,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
         lastX = xpos;
         lastY = ypos;
         firstMouse = false;
+		return;
     }
 
     // Calcular el desplazamiento del ratón desde la última posición registrada
@@ -199,7 +207,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     //cameraFront = glm::normalize(front); // Normalizar el vector para asegurar que tenga una magnitud de 1
-    origin = glm::normalize(front); // Normalizar el vector para asegurar que tenga una magnitud de 1
+    origin2 = glm::normalize(front); // Normalizar el vector para asegurar que tenga una magnitud de 1
 
 }
 
@@ -345,7 +353,7 @@ void init(GLFWwindow* window) {
 
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
-	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 100.0f);
 
 	setupVertices();
 	setupShadowBuffers(window);
@@ -367,19 +375,19 @@ void processInput(GLFWwindow *window) {
 
     // Mover hacia adelante (W)
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraLoc += cameraSpeed * deltaTime * origin; // Adelante
+        cameraLoc += cameraSpeed * deltaTime * origin2; // Adelante
 
     // Mover hacia atrás (S)
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraLoc -= cameraSpeed * deltaTime * origin; // Atrás
+        cameraLoc -= cameraSpeed * deltaTime * origin2; // Atrás
 
     // Mover hacia la izquierda (A)
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraLoc -= glm::normalize(glm::cross(origin, up)) * cameraSpeed * deltaTime; // Izquierda
+        cameraLoc -= glm::normalize(glm::cross(origin2, up)) * cameraSpeed * deltaTime; // Izquierda
 
     // Mover hacia la derecha (D)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraLoc += glm::normalize(glm::cross(origin,up)) * cameraSpeed * deltaTime;
+        cameraLoc += glm::normalize(glm::cross(origin2,up)) * cameraSpeed * deltaTime;
 
   
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
@@ -445,7 +453,8 @@ void passOne(void) {
 
 	// draw the torus
 	mMat = glm::translate(glm::mat4(1.0f), torusLoc);
-	//mMat = glm::translate(mMat, glm::vec3(0.0f, 0.0f, -1.80f));
+	mMat = glm::rotate(mMat, toRadians(105.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(25.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	shadowMVP1 = lightPmatrix * lightVmatrix * mMat;
 	sLoc = glGetUniformLocation(renderingProgram1, "shadowMVP");
@@ -464,8 +473,8 @@ void passOne(void) {
 	mesPyramid->setupMesh();
 
 	mMat = glm::translate(glm::mat4(1.0f), pyrLoc);
-//	mMat = glm::rotate(mMat, toRadians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-//	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	shadowMVP1 = lightPmatrix * lightVmatrix * mMat;
 	glUniformMatrix4fv(sLoc, 1, GL_FALSE, glm::value_ptr(shadowMVP1));
@@ -502,9 +511,12 @@ void passTwo(void) {
 	thisSpe[0] = bMatSpe[0]; thisSpe[1] = bMatSpe[1]; thisSpe[2] = bMatSpe[2];
 	thisShi = bMatShi;
 
-	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraLoc.x, -cameraLoc.y, -cameraLoc.z));
+	vMat = glm::lookAt(cameraLoc, cameraLoc + origin2 , up);
+	pMat = glm::perspective(glm::radians(Zoom), aspect, 0.1f, 100.0f);
 
 	mMat = glm::translate(glm::mat4(1.0f), torusLoc);
+	mMat = glm::rotate(mMat, toRadians(105.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(25.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	currentLightPos = glm::vec3(lightLoc);
 	installLights(renderingProgram2, vMat);
@@ -536,6 +548,9 @@ void passTwo(void) {
 	thisShi = gMatShi;
 
 	mMat = glm::translate(glm::mat4(1.0f), pyrLoc);
+	mMat = glm::rotate(mMat, toRadians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
 
 	currentLightPos = glm::vec3(lightLoc);
 	installLights(renderingProgram2, vMat);
@@ -580,7 +595,7 @@ void passTwo(void) {
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	aspect = (float)newWidth / (float)newHeight;
 	glViewport(0, 0, newWidth, newHeight);
-	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 100.0f);
 
 }
 

@@ -37,7 +37,7 @@ python buildWindows.py
 ```
 
 ## warning 
-If you are a Windows user, you must change the paths to the resources.
+If you are a Windows user, you may need to change the paths to the ressources in the code.
 
 
 Computer Graphics Programming in OpenGl with C++. This will build the project and compile all the programs located inside the src folder. more information about the programs can be found in the wiki. 
