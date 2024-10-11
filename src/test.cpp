@@ -33,6 +33,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 MeshFactory factory;
 GLuint renderingProgram;
 
+unsigned int modelLoc;
+unsigned int viewLoc;
+unsigned int projectionLoc;
 
 void init(){
 
@@ -40,77 +43,46 @@ void init(){
             "./shaders/vertex_shader1.glsl",
             "./shaders/fragment_shader1.glsl");
 
-    cameraPos   = glm::vec3(0.0f, 0.0f,  -3.0f);
-    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    cameraPos   = glm::vec3(-2.0f, 1.2f, 8.0f);
+    cameraFront = glm::vec3(-3.8f, 2.2f, 1.1f);
     cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
- 
+
+    glEnable(GL_DEPTH_TEST);
+    
     setupMesh();
 }
 
 // Function to updae the display
 void display(GLFWwindow* window) {
 
-    glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Establecer el color de limpieza primero
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Incluir el buffer de profundidad
+    //glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
+ 
 
+    auto mesh = factory.createMesh("torus");
+    mesh->setupMesh();
+   
+    glUseProgram(renderingProgram);
     
-    model = glm::mat4(1.0f);
+   
     view = glm::mat4(1.0f);
     projection = glm::mat4(1.0f);
 
-
-    model = glm::translate(model, glm::vec3(1.0f, 0.0f, -8.0f));
-
-//    float angle = glm::radians(20.0f * (float)glfwGetTime()); // Cambiar con el tiempo
-
-//    model = glm::rotate(model, angle, glm::vec3(0.5f, 1.0f, 0.0f));
-
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(-3.8f, 2.2f, 1.1f));
     model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-
-        
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-        
-    projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
-
     
-    auto mesh = factory.createMesh("torus");
-    mesh->setupMesh();
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    projection = glm::perspective(glm::radians(45.0f), aspectRatio , 0.1f, 100.0f);
 
-    glUseProgram(renderingProgram);
-
-    unsigned int modelLoc = glGetUniformLocation(renderingProgram, "model");
-    unsigned int viewLoc = glGetUniformLocation(renderingProgram, "view");
-    unsigned int projectionLoc = glGetUniformLocation(renderingProgram, "projection");
+   modelLoc = glGetUniformLocation(renderingProgram, "model");
+   viewLoc = glGetUniformLocation(renderingProgram, "view");
+   projectionLoc = glGetUniformLocation(renderingProgram, "projection");
 
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
     
     mesh->render();
-    model = glm::mat4(1.0f);
-    
-
-    model = glm::translate(model, glm::vec3(5.0f, 0.0f, -8.0f));
-
-//    float angle = glm::radians(20.0f * (float)glfwGetTime()); // Cambiar con el tiempo
-//    model = glm::rotate(model, angle, glm::vec3(0.5f, 1.0f, 0.0f));
-
-    model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-    
-    auto mesh1 = factory.createMesh("pyramid");
-    mesh1->setupMesh();
-
-    //glUseProgram(renderingProgram);
-    //unsigned int modelLoc = glGetUniformLocation(renderingProgram, "model");
-    //unsigned int viewLoc = glGetUniformLocation(renderingProgram, "view");
-    //unsigned int projectionLoc = glGetUniformLocation(renderingProgram, "projection");
-
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-//    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
- //   glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-    mesh1->render();
-
 }
 
 
@@ -140,14 +112,15 @@ int main() {
     }
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glViewport(0, 0, mode->width, mode->height);
 
     
     init();
 
     while (!glfwWindowShouldClose(window)) {
         calculateDeltaTime();
-        display(window);
         processInput(window);          
+        display(window);
         glfwPollEvents();
         glfwSwapBuffers(window); 
     }
@@ -159,7 +132,7 @@ int main() {
 
 void setupMesh(){
 
-    Torus myTorus(0.6f, 1.0f, 36, 72);
+    Torus myTorus(2.0f, 1.0f, 36, 72);
 	
     int numTorusVertices = myTorus.getNumVertices();
 	int numTorusIndices = myTorus.getNumIndices();
@@ -183,6 +156,7 @@ void setupMesh(){
         return std::make_unique<MeshTorus>(vertexPositions, ind);
     });
 
+/*
     ModelImporter pyramid;
     pyramid.parseObjFile("./models/pyr.obj");
 
@@ -212,7 +186,7 @@ void setupMesh(){
         return std::make_unique<MeshPyramid>(vertexPositions);
     });
 
-
+*/
 
 }
 
@@ -224,7 +198,7 @@ void calculateDeltaTime() {
 
 void processInput(GLFWwindow *window)
 {
-    const float cameraSpeed = 5.05f * deltaTime; // adjust accordingly
+    const float cameraSpeed = 1.05f * deltaTime; // adjust accordingly
     
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -241,7 +215,7 @@ void processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
-    //std::cout << " hello " << std::endl;
+    std::cout << " hello " << std::endl;
 
 }
 
@@ -250,3 +224,27 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     aspectRatio = (float)width / (float)height;
     projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
 }
+
+
+
+/*
+
+    model = glm::mat4(1.0f); 
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -8.0f));
+    model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+    
+//    auto mesh1 = factory.createMesh("pyramid");
+  //  mesh1->setupMesh();
+
+    //glUseProgram(renderingProgram);
+    //modelLoc = glGetUniformLocation(renderingProgram, "model");
+    //unsigned int viewLoc = glGetUniformLocation(renderingProgram, "view");
+    //unsigned int projectionLoc = glGetUniformLocation(renderingProgram, "projection");
+
+    //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    //glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+   // mesh1->render();
+
+*/
