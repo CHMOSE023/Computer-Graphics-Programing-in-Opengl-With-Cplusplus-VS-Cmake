@@ -400,8 +400,6 @@ void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
 
-
-
 int main(void) {
     if (!glfwInit()) {
         std::cerr << "ERROR: GLFW could not initialize" << std::endl;

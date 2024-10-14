@@ -68,7 +68,7 @@ void display(GLFWwindow* window) {
     view = glm::mat4(1.0f);
     projection = glm::mat4(1.0f);
 
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(-3.8f, 2.2f, 1.1f));
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(-10.8f, 0.2f, 8.1f));
     model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
     
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);

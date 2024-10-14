@@ -420,7 +420,8 @@ void display(GLFWwindow* window, double currentTime) {
 	currentLightPos = glm::vec3(lightLoc);
 
 	lightVmatrix = glm::lookAt(currentLightPos, origin, up);
-    lightPmatrix =  glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 1000.0f);
+	lightPmatrix = glm::perspective(glm::radians(90.0f), (float)scSizeX / (float)scSizeY, 0.1f, 1000.0f);
+	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowBuffer);
 	glViewport(0, 0, width, height);

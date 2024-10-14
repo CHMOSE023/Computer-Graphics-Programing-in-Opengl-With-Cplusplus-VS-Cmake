@@ -24,17 +24,13 @@ uniform mat4 shadowMVP;
 layout (binding=0) uniform sampler2DShadow shadowTex;
 
 float lookup(float x, float y)
-{  	float t = textureProj(shadowTex, shadow_coord + vec4(x * 0.001 * shadow_coord.w,
+{  	
+	float t = textureProj(shadowTex, shadow_coord + vec4(x * 0.001 * shadow_coord.w,
                                                          y * 0.001 * shadow_coord.w,
                                                          -0.01, 0.0));
 	return t;
 }
 
-float gaussianKernel[9] = float[9](
-    0.0625, 0.125, 0.0625,
-    0.125,  0.25,  0.125,
-    0.0625, 0.125, 0.0625
-);
 
 void main(void)
 {
@@ -45,19 +41,9 @@ void main(void)
 	vec3 N = normalize(varyingNormal);
 	vec3 V = normalize(-varyingVertPos);
 	vec3 H = normalize(varyingHalfVec);
-/*
-	float swidth = 2.5;
-	vec2 o = mod(floor(gl_FragCoord.xy), 2.0) * swidth;
-	shadowFactor += lookup(-1.5*swidth + o.x,  1.5*swidth - o.y);
-	shadowFactor += lookup(-1.5*swidth + o.x, -0.5*swidth - o.y);
-	shadowFactor += lookup( 0.5*swidth + o.x,  1.5*swidth - o.y);
-	shadowFactor += lookup( 0.5*swidth + o.x, -0.5*swidth - o.y);
-	shadowFactor = shadowFactor / 4.0;
 
 
-	// hi res PCF
-	int index = 0;
-	float width = 1.5;
+	float width = 0.7;
 	float endp = width * 3.0 + width/2.0;
 	
 	for (float m=-endp ; m<=endp ; m=m+width)
@@ -66,12 +52,8 @@ void main(void)
 			shadowFactor += lookup(m,n);
 		}
 	}
+	
 	shadowFactor = shadowFactor / 64.0;
-*/
-
-
-	// this would produce normal hard shadows
-	shadowFactor = lookup(0.0, 0.0);
 
 	vec4 shadowColor = globalAmbient * material.ambient
 				+ light.ambient * material.ambient;
