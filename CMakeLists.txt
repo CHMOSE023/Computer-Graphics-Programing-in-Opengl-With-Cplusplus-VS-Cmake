@@ -8,7 +8,7 @@ project(graphics VERSION 2.0.1 LANGUAGES CXX)
 set(LIBRARIES_DIR
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/glad
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/soild2
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/utils
 )
 
 foreach(dir ${LIBRARIES_DIR})
@@ -23,6 +23,8 @@ set(SOURCE_MAIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SOURCE_TEXTURE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/textures)
 set(SOURCE_MODELS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/models)
 set(SOURCE_SHADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders)
+set(SOURCE_CUBEMAP1_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/textures/cubeMap1)
+set(SOURCE_CUBEMAP2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/textures/cubeMap2)
 
 file(GLOB SOURCE_FILES ${SOURCE_MAIN_DIR}/*.cpp)
 
@@ -59,12 +61,16 @@ else()
     set(RUNTIME_OUTPUT_DIRECTORY_PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/programs)
     set(RUNTIME_OUTPUT_DIRECTORY_SHADERS ${CMAKE_CURRENT_BINARY_DIR}/programs/shaders)
     set(RUNTIME_OUTPUT_DIRECTORY_TEXTURES ${CMAKE_CURRENT_BINARY_DIR}/programs/textures)
+    set(RUNTIME_OUTPUT_DIRECTORY_CUBEMAP1 ${CMAKE_CURRENT_BINARY_DIR}/programs/textures/cubeMap1)
+    set(RUNTIME_OUTPUT_DIRECTORY_CUBEMAP2 ${CMAKE_CURRENT_BINARY_DIR}/programs/textures/cubeMap2)
     set(RUNTIME_OUTPUT_DIRECTORY_MODELS ${CMAKE_CURRENT_BINARY_DIR}/programs/models)
 
     file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_PROGRAMS})
     file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_SHADERS})
     file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_TEXTURES})
     file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_MODELS})
+    file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_CUBEMAP1})
+    file(MAKE_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY_CUBEMAP2})
 
 
     foreach(SOURCE_FILE ${SOURCE_FILES})
@@ -99,7 +105,19 @@ else()
         foreach(FILE ${ALL_FILES})
             file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs/models)
         endforeach()
-        
+
+        # Copy cubemap files to the same directory as the executable
+        file(GLOB ALL_FILES "${SOURCE_CUBEMAP1_DIR}/*")
+        foreach(FILE ${ALL_FILES})
+            file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs/textures/cubeMap1)
+        endforeach()
+
+         # Copy cubemap files to the same directory as the executable
+        file(GLOB ALL_FILES "${SOURCE_CUBEMAP2_DIR}/*")
+        foreach(FILE ${ALL_FILES})
+            file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/programs/textures/cubeMap2)
+        endforeach()       
+ 
     endforeach()
 endif()
 

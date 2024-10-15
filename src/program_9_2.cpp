@@ -13,6 +13,7 @@
 float cameraX, cameraY, cameraZ;
 float torLocX, torLocY, torLocZ;
 GLuint renderingProgram;
+GLuint renderingProgramCubeMap;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 GLuint brickTexture, skyboxTexture;
@@ -149,15 +150,17 @@ void setupVertices(void) {
 
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader91.glsl", "./shaders/fragment_shader91.glsl");
-
-	glfwGetFramebufferSize(window, &width, &height);
+    renderingProgramCubeMap = Utils::createShaderProgram("./shaders/vertex_shader92.glsl", "./shaders/fragment_shader92.glsl");
+	
+    glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 
 	setupVertices();
 
 	brickTexture = Utils::loadTexture("./textures/brick1.jpg");
-	skyboxTexture = Utils::loadTexture("./textures/alien.jpg");
+	skyboxTexture = Utils::loadCubeMap("./textures/cubeMap1");
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	torLocX = 0.0f; torLocY = -0.75f; torLocZ = 0.0f;
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
@@ -174,7 +177,7 @@ void display(GLFWwindow* window, double currentTime) {
 
 	// draw cube map
 
-	glUseProgram(renderingProgram);
+	glUseProgram(renderingProgramCubeMap);
 
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cameraX, cameraY, cameraZ));
 	mvMat = vMat * mMat;
@@ -194,7 +197,7 @@ void display(GLFWwindow* window, double currentTime) {
 	glEnableVertexAttribArray(1);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, skyboxTexture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
 
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);	// cube is CW, but we are viewing the inside
