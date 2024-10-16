@@ -10,9 +10,9 @@ layout (binding = 0) uniform samplerCube t;
 void main(void)
 {
     
-    
-    vec3 viewDir = normalize(vVertPos - eyePos);
-    vec3 r = reflect(viewDir, normalize(vNormal));
+    float ratio = 1.00 / 2.42; 
+    vec3 viewDir = normalize(eyePos - vVertPos);
+    vec3 r = -refract(viewDir, normalize(vNormal), ratio);
     fragColor = vec4(texture(t, r).rgb, 1.0);
     
 }

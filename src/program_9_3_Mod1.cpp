@@ -7,7 +7,7 @@
 #include <modelImporter.hpp>
 #include <iostream>
 
-#define numVAOs 1
+#define numVAOs 2
 #define numVBOs 5
 
 glm::vec3 cameraLoc = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -192,53 +192,81 @@ void setupVertices(void) {
 		1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f
 	};
 
-	numTorusVertices = myTorus.getNumVertices();
-	numTorusIndices = myTorus.getNumIndices();
+    float vertexPositions[] = {
+        // Cara trasera (normales hacia -Z)
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
 
-	std::vector<unsigned int> ind = myTorus.getIndices();
-	std::vector<glm::vec3> vert = myTorus.getVertices();
-	std::vector<glm::vec2> tex = myTorus.getTexCoords();
-	std::vector<glm::vec3> norm = myTorus.getNormals();
+        // Cara delantera (normales hacia +Z)
+        -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
 
-	std::vector<float> pvalues;
-	std::vector<float> tvalues;
-	std::vector<float> nvalues;
+        // Cara izquierda (normales hacia -X)
+        -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f,
 
-	for (int i = 0; i < numTorusVertices; i++) {
-		pvalues.push_back(vert[i].x);
-		pvalues.push_back(vert[i].y);
-		pvalues.push_back(vert[i].z);
-		tvalues.push_back(tex[i].s);
-		tvalues.push_back(tex[i].t);
-		nvalues.push_back(norm[i].x);
-		nvalues.push_back(norm[i].y);
-		nvalues.push_back(norm[i].z);
-	}
+        // Cara derecha (normales hacia +X)
+         0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
 
+        // Cara inferior (normales hacia -Y)
+        -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
 
-	glGenVertexArrays(1, vao);
-	glBindVertexArray(vao[0]);
+        // Cara superior (normales hacia +Y)
+        -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f
+    };
+
+	glGenVertexArrays(2, vao);
+    
+    glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertexPositions), cubeVertexPositions, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
 
+    glBindVertexArray(vao[1]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
+   
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+   
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
-
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * 4, &ind[0], GL_STATIC_DRAW);
 }
 
 void init(GLFWwindow* window) {
-	renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader93Mod.glsl", "./shaders/fragment_shader93Mod.glsl"); //reflection
-	//renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader93Mod.glsl", "./shaders/fragment_shader93Mod1.glsl"); //refraction
+	//renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader93Mod.glsl", "./shaders/fragment_shader93Mod.glsl"); //reflection
+	renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader93Mod.glsl", "./shaders/fragment_shader93Mod1.glsl"); //refraction
     renderingProgramCubeMap = Utils::createShaderProgram("./shaders/vertex_shader92.glsl", "./shaders/fragment_shader92.glsl");
 		
     glfwGetFramebufferSize(window, &width, &height);
@@ -259,60 +287,52 @@ void display(GLFWwindow* window, double currentTime) {
 	float currentFrame = static_cast<float>(currentTime);
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
- 
-    glClear(GL_DEPTH_BUFFER_BIT);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	// draw cube map
-    vMat = glm::lookAt(cameraLoc, cameraLoc + origin , up);    
-    pMat = glm::perspective(glm::radians(Zoom), aspect, 0.1f, 100.0f);
     
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+    // draw cube map
     glUseProgram(renderingProgramCubeMap);
-	glUniformMatrix4fv(glGetUniformLocation(renderingProgramCubeMap, "mv_matrix"), 1, GL_FALSE, glm::value_ptr(vMat));
+
+    vMat = glm::lookAt(cameraLoc, cameraLoc + origin , up);    
+    pMat = glm::perspective(glm::radians(Zoom), aspect, 0.1f, 1000.0f);    
+    
+    glUniformMatrix4fv(glGetUniformLocation(renderingProgramCubeMap, "mv_matrix"), 1, GL_FALSE, glm::value_ptr(vMat));
     glUniformMatrix4fv(glGetUniformLocation(renderingProgramCubeMap, "proj_matrix"), 1, GL_FALSE, glm::value_ptr(pMat));
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(vao[0]);	
+    glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
-
+   
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);	// cube is CW, but we are viewing the inside
 	glDisable(GL_DEPTH_TEST);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glEnable(GL_DEPTH_TEST);
-    
-	// draw scene (in this case it is just a torus
-	glUseProgram(renderingProgram);
+    glDisable(GL_CULL_FACE);
+
+	// draw cube 
+    glEnable(GL_DEPTH_TEST);
+ 	glUseProgram(renderingProgram);
 
     mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torLocX, torLocY, torLocZ));
-	mMat = glm::rotate(mMat, toRadians(100.0f), glm::vec3(1.0f, 0.0f, 0.0f));	
+    vMat = glm::lookAt(cameraLoc, cameraLoc + origin , up);    
+    pMat = glm::perspective(glm::radians(Zoom), aspect, 0.1f, 100.0f);    
     
-    pMat = glm::perspective(glm::radians(Zoom), aspect, 0.1f, 100.0f);
-    
+    mvMat = vMat * mMat;    
     invTrMat = glm::transpose(glm::inverse(mMat));
-    
-	glUniformMatrix4fv(glGetUniformLocation(renderingProgram, "view_matrix"), 1, GL_FALSE, glm::value_ptr(vMat));
+
 	glUniformMatrix4fv(glGetUniformLocation(renderingProgram, "model_matrix"), 1, GL_FALSE, glm::value_ptr(mMat));
+	glUniformMatrix4fv(glGetUniformLocation(renderingProgram, "view_matrix"), 1, GL_FALSE, glm::value_ptr(vMat));
 	glUniformMatrix4fv(glGetUniformLocation(renderingProgram, "proj_matrix"), 1, GL_FALSE, glm::value_ptr(pMat));
-    glUniform3f(glGetUniformLocation(renderingProgram, "eyePos"), cameraLoc.x, cameraLoc.y, cameraLoc.z);
     glUniformMatrix4fv(glGetUniformLocation(renderingProgram, "norm_matrix"), 1, GL_FALSE, glm::value_ptr(invTrMat));
+    glUniform3f(glGetUniformLocation(renderingProgram, "eyePos"), cameraLoc.x, cameraLoc.y, cameraLoc.z);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(1);
-
-	glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(vao[1]);
+    glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
-	glDrawElements(GL_TRIANGLES, numTorusIndices, GL_UNSIGNED_INT, 0);
+
 }
 
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
@@ -320,3 +340,6 @@ void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
 	glViewport(0, 0, newWidth, newHeight);
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
+
+
+

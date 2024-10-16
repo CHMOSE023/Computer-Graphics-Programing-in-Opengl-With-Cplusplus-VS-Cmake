@@ -182,8 +182,8 @@ void display(GLFWwindow* window, double currentTime) {
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cameraX, cameraY, cameraZ));
 	mvMat = vMat * mMat;
 
-	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
-	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	mvLoc = glGetUniformLocation(renderingProgramCubeMap, "mv_matrix");
+	projLoc = glGetUniformLocation(renderingProgramCubeMap, "proj_matrix");
 
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));

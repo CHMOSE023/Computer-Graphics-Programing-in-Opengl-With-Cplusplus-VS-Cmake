@@ -6,14 +6,15 @@ layout (location = 1) in vec3 normal;
 out vec3 vNormal;
 out vec3 vVertPos;
 
-uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
+uniform mat4 view_matrix;
+uniform mat4 model_matrix;
 uniform mat4 norm_matrix;
 layout (binding = 0) uniform samplerCube t;
 
 void main(void)
 {
-	vNormal = mat3(transpose(inverse(mv_matrix))) * normal;
-	vVertPos = vec3(mv_matrix * vec4(position,1.0));
-	gl_Position = proj_matrix * mv_matrix * vec4(position,1.0);
+	vNormal = (norm_matrix * vec4(normal,1.0)).xyz;
+	vVertPos = vec3(model_matrix * vec4(position,1.0));
+	gl_Position = proj_matrix * view_matrix * model_matrix * vec4(position,1.0);
 }

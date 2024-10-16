@@ -143,7 +143,7 @@ void init(GLFWwindow* window) {
 
 	setupVertices();
 
-	skyboxTexture = Utils::loadCubeMap("./textures/cubeMap1");
+	skyboxTexture = Utils::loadCubeMap("./textures/cubeMap2");
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
 	torLocX = 0.0f; torLocY = -0.75f; torLocZ = 0.0f;
@@ -166,8 +166,8 @@ void display(GLFWwindow* window, double currentTime) {
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cameraX, cameraY, cameraZ));
 	mvMat = vMat * mMat;
 
-	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
-	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	mvLoc = glGetUniformLocation(renderingProgramCubeMap, "mv_matrix");
+	projLoc = glGetUniformLocation(renderingProgramCubeMap, "proj_matrix");
 
 
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
@@ -195,7 +195,6 @@ void display(GLFWwindow* window, double currentTime) {
     nLoc = glGetUniformLocation(renderingProgram, "norm_matrix");
 
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torLocX, torLocY, torLocZ));
-	mMat = glm::translate(mMat, glm::vec3(-3.2f, 0.6f, 0.0f));
 	mMat = glm::scale(mMat, glm::vec3(0.2f, 0.2f, 0.2f));
 	mMat = glm::rotate(mMat, toRadians(125.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 

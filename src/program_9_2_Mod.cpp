@@ -303,8 +303,8 @@ void display(GLFWwindow* window, double currentTime) {
 	
     //pMat = glm::perspective(1.0472f, aspect, 0.1f, 100.0f);
 
-	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
-	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	mvLoc = glGetUniformLocation(renderingProgramCubeMap, "mv_matrix");
+	projLoc = glGetUniformLocation(renderingProgramCubeMap, "proj_matrix");
 
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
