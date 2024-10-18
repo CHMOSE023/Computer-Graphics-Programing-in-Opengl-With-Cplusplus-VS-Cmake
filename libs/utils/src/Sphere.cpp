@@ -50,6 +50,10 @@ void Sphere::buildVertices(){
             t = (float)i / stackCount;
             texCoords.push_back(glm::vec2(s,t));
 
+            //tangent
+            float tx = -radius * sinf(sectorAngle);
+            float ty = radius * cosf(sectorAngle);
+            tangents.push_back(glm::vec3(tx,ty,0));
         }
     }
 }
@@ -111,3 +115,7 @@ std::vector<glm::vec3> Sphere::getNormals()
     return normals;
 }
 
+std::vector<glm::vec3> Sphere::getTangents()
+{
+    return tangents;
+}

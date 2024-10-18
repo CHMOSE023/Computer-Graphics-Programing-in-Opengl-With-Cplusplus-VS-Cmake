@@ -10,6 +10,7 @@ find_package(OpenGL REQUIRED)
 
 set(MAIN_SOURCE_FILES 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sphere.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Sphere2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Torus.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Utils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/modelImporter.cpp
@@ -17,6 +18,7 @@ set(MAIN_SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshTorus.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshPyramid.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshSphere.cpp
+
 )
 
 
