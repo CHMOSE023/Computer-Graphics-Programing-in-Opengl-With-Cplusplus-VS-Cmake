@@ -17,6 +17,7 @@ GLuint renderingProgram;
 GLuint vao[numVAOs];
 
 GLuint mvpLoc;
+GLuint floorTex;
 int width, height;
 float aspect;
 glm::mat4 projectMat, viewMat, modelMat, mvpMat, mvMat, normMat;
@@ -42,7 +43,7 @@ int main(void) {
 
     //GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_3", NULL, NULL);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_12_1 ", nullptr, nullptr);    
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_12_2 ", nullptr, nullptr);    
     if (!window) {
         std::cerr << "ERROR: GLFW window could not be created" << std::endl;
         glfwTerminate();
@@ -71,14 +72,16 @@ int main(void) {
 }
 
 void init(GLFWwindow* window) {
-	renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader121.glsl", "./shaders/tessC_shader121.glsl", "./shaders/tessE_shader121.glsl", "./shaders/fragment_shader121.glsl");
-	cameraX = 0.5f; cameraY = 0.4f; cameraZ = 1.5f;
+	renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader122.glsl", "./shaders/tessC_shader122.glsl", "./shaders/tessE_shader122.glsl", "./shaders/fragment_shader122.glsl");
+	cameraX = 0.2f; cameraY = 0.2f; cameraZ = 3.5f;
 	terLocX = 0.0f; terLocY = 0.0f; terLocZ = 0.0f;
 
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
 	projectMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 	
+    floorTex = Utils::loadTexture("./textures/floor.jpg");
+
 	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
 }
@@ -91,18 +94,20 @@ void display(GLFWwindow* window, double currentTime) {
 
     viewMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
     modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(terLocX, terLocY, terLocZ));
-    modelMat = glm::rotate(modelMat, toRadians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));    
-    modelMat = glm::rotate(modelMat, toRadians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));    
+    modelMat = glm::rotate(modelMat, toRadians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));    
     mvpMat = projectMat * viewMat * modelMat;
     
     mvpLoc = glGetUniformLocation(renderingProgram, "mvp_matrix");
     glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
 
-	glFrontFace(GL_CCW);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, floorTex);
+    
+    glFrontFace(GL_CCW);
 
-	glPatchParameteri(GL_PATCH_VERTICES, 3);
+	glPatchParameteri(GL_PATCH_VERTICES, 16);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // FILL or LINE
-	glDrawArrays(GL_PATCHES, 0, 3);
+	glDrawArrays(GL_PATCHES, 0, 16);
 
 }
 

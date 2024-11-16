@@ -43,6 +43,7 @@ If you are a Windows user, you may need to change the paths to the ressources in
 Computer Graphics Programming in OpenGl with C++. This will build the project and compile all the programs located inside the src folder. more information about the programs can be found in the wiki. 
 
 ---------------------------
-#### You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++, Third Edition by V. Scott Gordon and John Clevenger.
+**You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++.
+Third Edition by V. Scott Gordon and John Clevenger.**
 
 ![image1](graphi.png "image1")
