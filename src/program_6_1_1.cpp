@@ -183,7 +183,7 @@ int main() {
     // Create a GLFW window
     //GLFWwindow* window = glfwCreateWindow(800, 600, "Esfera con Triángulos", nullptr, nullptr);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_Esfera ", nullptr, nullptr);    
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_6_1_1 ", nullptr, nullptr);    
     if (!window) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();

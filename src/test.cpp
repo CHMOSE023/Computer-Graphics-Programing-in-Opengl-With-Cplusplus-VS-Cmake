@@ -1,250 +1,228 @@
-#define GLFW_INCLUDE_NONE
-#include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <MeshFactory.hpp>
-#include <MeshTorus.hpp>
-#include <Utils.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <Torus.hpp>
-#include <MeshPyramid.hpp>
+#include <Utils.hpp>
 #include <modelImporter.hpp>
+#include <iostream>
 
-glm::mat4 model;
-glm::mat4 view;
-glm::mat4 projection;
-
-float aspectRatio;
-
-glm::vec3 cameraPos;
-glm::vec3 cameraFront;
-glm::vec3 cameraUp;
-
-float deltaTime = 1.0f;	// Time between current frame and last frame
-float lastFrame = 1.0f; // Time of last frame
+float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
+Torus myTorus(0.6f, 1.0f, 36, 72);
+int numTorusVertices = myTorus.getNumVertices();
+int numTorusIndices = myTorus.getNumIndices();
 
 
-//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
-void setupMesh();
-void calculateDeltaTime();
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+#define numVAOs 1
+#define numVBOs 4
 
-
-MeshFactory factory;
+float cameraX, cameraY, cameraZ;
+float torLocX, torLocY, torLocZ;
 GLuint renderingProgram;
+GLuint vao[numVAOs];
+GLuint vbo[numVBOs];
 
-unsigned int modelLoc;
-unsigned int viewLoc;
-unsigned int projectionLoc;
+glm::vec3 lightLoc = glm::vec3(5.0f, 2.0f, 2.0f);
+float amt = 0.0f;
 
-void init(){
+// variable allocation for display
+GLuint mvLoc, projLoc, nLoc;
+GLuint globalAmbLoc, ambLoc, diffLoc, specLoc, posLoc, mambLoc, mdiffLoc, mspecLoc, mshiLoc;
+int width, height;
+float aspect;
+glm::mat4 pMat, vMat, mMat, mvMat, invTrMat, rMat;
+glm::vec3 currentLightPos;
+float lightPos[3];
 
-    renderingProgram = Utils::createShaderProgram(
-            "./shaders/vertex_shader1.glsl",
-            "./shaders/fragment_shader1.glsl");
+// white light
+float globalAmbient[4] = { 0.7f, 0.7f, 0.7f, 1.0f };
+float lightAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+float lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+float lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-    cameraPos   = glm::vec3(-2.0f, 1.2f, 8.0f);
-    cameraFront = glm::vec3(-3.8f, 2.2f, 1.1f);
-    cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+// gold material
+float* matAmb = Utils::goldAmbient();
+float* matDif = Utils::goldDiffuse();
+float* matSpe = Utils::goldSpecular();
+float matShi = Utils::goldShininess();
 
-    glEnable(GL_DEPTH_TEST);
-    
-    setupMesh();
-}
-
-// Function to updae the display
-void display(GLFWwindow* window) {
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Incluir el buffer de profundidad
-    //glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
- 
-
-    auto mesh = factory.createMesh("torus");
-    mesh->setupMesh();
-   
-    glUseProgram(renderingProgram);
-    
-   
-    view = glm::mat4(1.0f);
-    projection = glm::mat4(1.0f);
-
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(-10.8f, 0.2f, 8.1f));
-    model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-    
-    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-    projection = glm::perspective(glm::radians(45.0f), aspectRatio , 0.1f, 100.0f);
-
-   modelLoc = glGetUniformLocation(renderingProgram, "model");
-   viewLoc = glGetUniformLocation(renderingProgram, "view");
-   projectionLoc = glGetUniformLocation(renderingProgram, "projection");
-
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-    
-    mesh->render();
-}
+void init(GLFWwindow* window);
+void setupVertices(void);
+void init(GLFWwindow* window);
+void display(GLFWwindow* window, double currentTime);
+void window_size_callback(GLFWwindow* win, int newWidth, int newHeight);
 
 
-int main() {
-    
-    if (!glfwInit()) {exit(EXIT_FAILURE);}
+int main(void) {
+    if (!glfwInit()) {
+        std::cerr << "ERROR: GLFW could not initialize" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);                  
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);                  
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            
-    
+    //GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_3", NULL, NULL);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " Mesh ", nullptr, nullptr);
-
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_8_1 ", nullptr, nullptr);    
     if (!window) {
+        std::cerr << "ERROR: GLFW window could not be created" << std::endl;
         glfwTerminate();
         return -1;
     }
 
     glfwMakeContextCurrent(window);
-    glfwMaximizeWindow(window);
-
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-        std::cout << "failed to initialize GLAD " << std::endl;
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "ERROR: GLAD could not initialize" << std::endl;
         return -1;
     }
 
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glViewport(0, 0, mode->width, mode->height);
+    glfwSwapInterval(1);
 
-    
-    init();
+    init(window);
 
     while (!glfwWindowShouldClose(window)) {
-        calculateDeltaTime();
-        processInput(window);          
-        display(window);
+        display(window, glfwGetTime());
+        glfwSwapBuffers(window);
         glfwPollEvents();
-        glfwSwapBuffers(window); 
     }
 
+    glfwDestroyWindow(window);
     glfwTerminate();
-   
-    return 0;
+    exit(EXIT_SUCCESS);
 }
 
-void setupMesh(){
+void installLights(glm::mat4 vMatrix) {
+	glm::vec3 transformed = glm::vec3(vMatrix * glm::vec4(currentLightPos, 1.0));
+	lightPos[0] = transformed.x;
+	lightPos[1] = transformed.y;
+	lightPos[2] = transformed.z;
 
-    Torus myTorus(2.0f, 1.0f, 36, 72);
-	
-    int numTorusVertices = myTorus.getNumVertices();
-	int numTorusIndices = myTorus.getNumIndices();
+	// get the locations of the light and material fields in the shader
+	globalAmbLoc = glGetUniformLocation(renderingProgram, "globalAmbient");
+	ambLoc = glGetUniformLocation(renderingProgram, "light.ambient");
+	diffLoc = glGetUniformLocation(renderingProgram, "light.diffuse");
+	specLoc = glGetUniformLocation(renderingProgram, "light.specular");
+	posLoc = glGetUniformLocation(renderingProgram, "light.position");
+	mambLoc = glGetUniformLocation(renderingProgram, "material.ambient");
+	mdiffLoc = glGetUniformLocation(renderingProgram, "material.diffuse");
+	mspecLoc = glGetUniformLocation(renderingProgram, "material.specular");
+	mshiLoc = glGetUniformLocation(renderingProgram, "material.shininess");
+
+	//  set the uniform light and material values in the shader
+	glProgramUniform4fv(renderingProgram, globalAmbLoc, 1, globalAmbient);
+	glProgramUniform4fv(renderingProgram, ambLoc, 1, lightAmbient);
+	glProgramUniform4fv(renderingProgram, diffLoc, 1, lightDiffuse);
+	glProgramUniform4fv(renderingProgram, specLoc, 1, lightSpecular);
+	glProgramUniform3fv(renderingProgram, posLoc, 1, lightPos);
+	glProgramUniform4fv(renderingProgram, mambLoc, 1, matAmb);
+	glProgramUniform4fv(renderingProgram, mdiffLoc, 1, matDif);
+	glProgramUniform4fv(renderingProgram, mspecLoc, 1, matSpe);
+	glProgramUniform1f(renderingProgram, mshiLoc, matShi);
+}
+
+void setupVertices(void) {
+
 	std::vector<unsigned int> ind = myTorus.getIndices();
-
-    std::vector<glm::vec3> vert = myTorus.getVertices();
+	std::vector<glm::vec3> vert = myTorus.getVertices();
+	std::vector<glm::vec2> tex = myTorus.getTexCoords();
 	std::vector<glm::vec3> norm = myTorus.getNormals();
-    
-    std::vector<float> vertexPositions{};
 
-  	for (int i = 0; i < numTorusVertices; i++) {
-		vertexPositions.push_back(vert[i].x);
-		vertexPositions.push_back(vert[i].y);
-		vertexPositions.push_back(vert[i].z);
-		vertexPositions.push_back(norm[i].x);
-		vertexPositions.push_back(norm[i].y);
-		vertexPositions.push_back(norm[i].z);
+	std::vector<float> pvalues;
+	std::vector<float> tvalues;
+	std::vector<float> nvalues;
+
+	for (int i = 0; i < numTorusVertices; i++) {
+		pvalues.push_back(vert[i].x);
+		pvalues.push_back(vert[i].y);
+		pvalues.push_back(vert[i].z);
+		tvalues.push_back(tex[i].s);
+		tvalues.push_back(tex[i].t);
+		nvalues.push_back(norm[i].x);
+		nvalues.push_back(norm[i].y);
+		nvalues.push_back(norm[i].z);
 	}
 
-    factory.registerMeshType("torus", [vertexPositions, ind](){ 
-        return std::make_unique<MeshTorus>(vertexPositions, ind);
-    });
+	glGenVertexArrays(1, vao);
+	glBindVertexArray(vao[0]);
+	glGenBuffers(numVBOs, vbo);
 
-/*
-    ModelImporter pyramid;
-    pyramid.parseObjFile("./models/pyr.obj");
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
 
-	int numPyramidVertices = pyramid.getNumVertices();
-	std::vector<float> vertfloat = pyramid.getVertices();
-	std::vector<float> normfloat = pyramid.getNormals();
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+    glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
 
-	vert.clear();
-	norm.clear();
-    vertexPositions.clear();
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
 
-    for(int i = 0; i < numPyramidVertices; i++) {
-        vert.push_back(glm::vec3(vertfloat[i * 3], vertfloat[i * 3 + 1], vertfloat[i * 3 + 2]));
-        norm.push_back(glm::vec3(normfloat[i * 3], normfloat[i * 3 + 1], normfloat[i * 3 + 2]));
-    }
-
-	for (int i = 0; i < numPyramidVertices; i++) {
-		vertexPositions.push_back((vert[i]).x);
-		vertexPositions.push_back((vert[i]).y);
-	    vertexPositions.push_back((vert[i]).z);
-	    vertexPositions.push_back((norm[i]).x);
-	    vertexPositions.push_back((norm[i]).y);
-	    vertexPositions.push_back((norm[i]).z);
-	}
-
-    factory.registerMeshType("pyramid", [vertexPositions](){ 
-        return std::make_unique<MeshPyramid>(vertexPositions);
-    });
-
-*/
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * 4, &ind[0], GL_STATIC_DRAW);
 }
 
-void calculateDeltaTime() {
-    float currentFrame = glfwGetTime();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+void init(GLFWwindow* window) {
+	renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader131.glsl", "./shaders/fragment_shader131.glsl");
+	
+    glfwGetFramebufferSize(window, &width, &height);
+	aspect = (float)width / (float)height;
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
+
+	torLocX = 0.0f; torLocY = -0.75f; torLocZ = 0.0f;
+	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
+
+    setupVertices();
 }
 
-void processInput(GLFWwindow *window)
-{
-    const float cameraSpeed = 1.05f * deltaTime; // adjust accordingly
-    
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+void display(GLFWwindow* window, double currentTime) {
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraFront;
+	glUseProgram(renderingProgram);
 
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
+	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
+	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	nLoc = glGetUniformLocation(renderingProgram, "norm_matrix");
 
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
 
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torLocX, torLocY, torLocZ));
+	mMat = glm::rotate(mMat, toRadians(115.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-    std::cout << " hello " << std::endl;
+	currentLightPos = glm::vec3(lightLoc.x, lightLoc.y, lightLoc.z);
+	amt = currentTime * 25.0f;
+	rMat = glm::rotate(glm::mat4(1.0f), toRadians(amt), glm::vec3(0.0f, 0.0f, 1.0f));
+	currentLightPos = glm::vec3(rMat * glm::vec4(currentLightPos, 1.0f));
 
+	installLights(vMat);
+
+	mvMat = vMat * mMat;
+	invTrMat = glm::transpose(glm::inverse(mvMat));
+
+	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+	glUniformMatrix4fv(nLoc, 1, GL_FALSE, glm::value_ptr(invTrMat));
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
+	glDrawElements(GL_TRIANGLES, numTorusIndices, GL_UNSIGNED_INT, 0);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-    aspectRatio = (float)width / (float)height;
-    projection = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
+void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
+	aspect = (float)newWidth / (float)newHeight;
+	glViewport(0, 0, newWidth, newHeight);
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
-
-
-
-/*
-
-    model = glm::mat4(1.0f); 
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -8.0f));
-    model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-    
-//    auto mesh1 = factory.createMesh("pyramid");
-  //  mesh1->setupMesh();
-
-    //glUseProgram(renderingProgram);
-    //modelLoc = glGetUniformLocation(renderingProgram, "model");
-    //unsigned int viewLoc = glGetUniformLocation(renderingProgram, "view");
-    //unsigned int projectionLoc = glGetUniformLocation(renderingProgram, "projection");
-
-    //glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-    //glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-    //glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-   // mesh1->render();
-
-*/

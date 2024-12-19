@@ -120,7 +120,7 @@ int main(void) {
 
     //GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_3", NULL, NULL);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	GLFWwindow* window = glfwCreateWindow(1920, 1080, "program_8_1", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1920, 1080, "program_8_1_Mod", NULL, NULL);
  	//GLFWwindow* window = glfwCreateWindow(800, 800, "Chapter8 - program1", NULL, NULL);
 
 	//std::cout << " width: " << mode->width << " height: " << mode->height << std::endl;

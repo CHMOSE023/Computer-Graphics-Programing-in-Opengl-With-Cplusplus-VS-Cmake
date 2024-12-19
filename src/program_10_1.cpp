@@ -67,7 +67,7 @@ int main(void) {
 
     //GLFWwindow* window = glfwCreateWindow(1080, 720, "program_7_3", NULL, NULL);
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_8_1 ", nullptr, nullptr);    
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, " program_10_1 ", nullptr, nullptr);    
     if (!window) {
         std::cerr << "ERROR: GLFW window could not be created" << std::endl;
         glfwTerminate();
