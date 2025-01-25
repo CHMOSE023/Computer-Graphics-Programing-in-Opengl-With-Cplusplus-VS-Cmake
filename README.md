@@ -40,7 +40,7 @@ python buildWindows.py
 If you are a Windows user, you may need to change the paths to the ressources in the code.
 
 
-Computer Graphics Programming in OpenGl with C++. This will build the project and compile all the programs located inside the src folder. more information about the programs can be found in the wiki. 
+Computer Graphics Programming in OpenGl with C++. This will build the project and compile all the programs located inside the src folder.
 
 ---------------------------
 **You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++.
