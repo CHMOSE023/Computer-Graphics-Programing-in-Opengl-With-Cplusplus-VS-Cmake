@@ -11,7 +11,7 @@ layout (binding=1) uniform sampler2D h;	// for height map
 
 void main(void)
 {	vec4 fogColor = vec4(0.7, 0.8, 0.9, 1.0);	// bluish gray
-	float fogStart = 0.2;
+	float fogStart = 0.5;
 	float fogEnd = 0.8;
 
 	// the distance from the camera to the vertex in eye space is simply the length of a
