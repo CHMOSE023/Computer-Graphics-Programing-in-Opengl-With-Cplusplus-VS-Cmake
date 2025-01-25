@@ -16,17 +16,16 @@ float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
 #define numVAOs 1
 #define numVBOs 4
 
-float cameraX, cameraY, cameraZ;
-float torLocX, torLocY, torLocZ;
 GLuint renderingProgram;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 
-Torus myTorus(0.5f, 0.6f, 36, 72);
-int numTorusVertices = myTorus.getNumVertices();
-int numTorusIndices = myTorus.getNumIndices();
+Torus myTorus(0.6f, 1.0f, 36, 72);
+int numTorusVertices, numTorusIndices;
 
-glm::vec3 lightLoc = glm::vec3(5.0f, 2.0f, 2.0f);
+glm::vec3 torusLoc(0.0f, 0.0f, 0.0f);
+glm::vec3 cameraLoc(0.0f, 1.0f, 5.0f);
+glm::vec3 lightLoc(5.0f, 2.0f, 2.0f);
 
 // variable allocation for display
 GLuint mvLoc, projLoc, nLoc, flipLoc;
@@ -79,6 +78,7 @@ void installLights(glm::mat4 vMatrix) {
 }
 
 void setupVertices(void) {
+
 	std::vector<unsigned> ind = myTorus.getIndices();
 	std::vector<glm::vec3> vert = myTorus.getVertices();
 	std::vector<glm::vec2> tex = myTorus.getTexCoords();
@@ -87,6 +87,9 @@ void setupVertices(void) {
 	std::vector<float> pvalues;
 	std::vector<float> tvalues;
 	std::vector<float> nvalues;
+
+	numTorusVertices = myTorus.getNumVertices();
+	numTorusIndices = myTorus.getNumIndices();
 
 	for (int i = 0; i < myTorus.getNumVertices(); i++) {
 		pvalues.push_back(vert[i].x);
@@ -98,6 +101,7 @@ void setupVertices(void) {
 		nvalues.push_back(norm[i].y);
 		nvalues.push_back(norm[i].z);
 	}
+
 	glGenVertexArrays(1, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(numVBOs, vbo);
@@ -116,9 +120,8 @@ void setupVertices(void) {
 }
 
 void init(GLFWwindow* window) {
+
 	renderingProgram = Utils::createShaderProgram("./shaders/vertex_shader143.glsl", "./shaders/fragment_shader143.glsl");
-	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
-	torLocX = 0.0f; torLocY = 0.0f; torLocZ = 0.0f;
 
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
@@ -138,9 +141,9 @@ void display(GLFWwindow* window, double currentTime) {
 	nLoc = glGetUniformLocation(renderingProgram, "norm_matrix");
 	flipLoc = glGetUniformLocation(renderingProgram, "flipNormal");
 
-	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
+	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraLoc.x, -cameraLoc.y, -cameraLoc.z));
 
-	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torLocX, torLocY, torLocZ));
+	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(torusLoc.x, torusLoc.y, torusLoc.z));
 	mMat = glm::rotate(mMat, (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
 
 	currentLightPos = glm::vec3(lightLoc.x, lightLoc.y, lightLoc.z);
