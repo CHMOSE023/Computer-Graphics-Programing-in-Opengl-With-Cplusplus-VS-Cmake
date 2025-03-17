@@ -199,7 +199,6 @@ int main(void) {
     exit(EXIT_SUCCESS);
 }
 
-
 void installLights(glm::mat4 v_matrix) {
     lightPosV = glm::vec3(v_matrix * glm::vec4(currentLightPos, 1.0));
     lightPos[0] = lightPosV.x;
