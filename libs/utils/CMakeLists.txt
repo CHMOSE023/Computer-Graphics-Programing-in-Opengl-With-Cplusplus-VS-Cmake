@@ -18,7 +18,7 @@ set(MAIN_SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshTorus.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshPyramid.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MeshSphere.cpp
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HalfSphere.cpp
 )
 
 
