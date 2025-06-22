@@ -22,6 +22,7 @@ public:
 	Utils();
 	static bool checkOpenGLError();
 	static bool isExtensionSupported(const char* extName);
+	static GLuint createShaderProgram(const char *cp);
 	static GLuint createShaderProgram(const char *vp, const char *fp);
 	static GLuint createShaderProgram(const char *vp, const char *gp, const char *fp);
 	static GLuint createShaderProgram(const char *vp, const char *tCS, const char* tES, const char *fp);

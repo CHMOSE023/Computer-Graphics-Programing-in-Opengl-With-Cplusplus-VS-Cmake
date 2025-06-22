@@ -91,6 +91,15 @@ int Utils::finalizeShaderProgram(GLuint sprogram)
 	return sprogram;
 }
 
+GLuint Utils::createShaderProgram(const char *cp)
+{
+	GLuint cShader = prepareShader(GL_COMPUTE_SHADER, cp);
+	GLuint cprogram = glCreateProgram();
+	glAttachShader(cprogram, cShader);
+	finalizeShaderProgram(cprogram);
+	return cprogram;
+}
+
 GLuint Utils::createShaderProgram(const char *vp, const char *fp) {
 	GLuint vShader = prepareShader(GL_VERTEX_SHADER, vp);
 	GLuint fShader = prepareShader(GL_FRAGMENT_SHADER, fp);
@@ -161,7 +170,6 @@ GLuint Utils::loadCubeMap(const char *mapDir) {
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     return textureRef;
 }
-
 
 bool Utils::isExtensionSupported(const char* extName) {
     GLint numExtensions;
