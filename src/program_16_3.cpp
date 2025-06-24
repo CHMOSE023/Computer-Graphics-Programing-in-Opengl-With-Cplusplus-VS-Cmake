@@ -86,7 +86,7 @@ void init(GLFWwindow* window) {
 
     // Cargar shaders
     screenQuadShader = Utils::createShaderProgram("shaders/vertex_shader162_.glsl", "shaders/fragment_shader162_.glsl");
-    raytraceComputeShader = Utils::createShaderProgramCP("shaders/compute_shader162_.glsl");
+    raytraceComputeShader = Utils::createShaderProgramCP("shaders/compute_shader163.glsl");
 }
 
 void display(GLFWwindow* window, double currentTime) {
@@ -131,7 +131,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "program_16_2", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "program_16_3", nullptr, nullptr);
     if (!window) {
         std::cerr << "No se pudo crear la ventana GLFW\n";
         glfwTerminate();
