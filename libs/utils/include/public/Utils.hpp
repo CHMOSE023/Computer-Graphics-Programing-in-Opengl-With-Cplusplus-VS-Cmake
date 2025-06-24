@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+
 class Utils
 {
 private:
@@ -22,13 +23,14 @@ public:
 	Utils();
 	static bool checkOpenGLError();
 	static bool isExtensionSupported(const char* extName);
-	static GLuint createShaderProgram(const char *cp);
+	static GLuint createShaderProgramCP(const char *cp);
 	static GLuint createShaderProgram(const char *vp, const char *fp);
 	static GLuint createShaderProgram(const char *vp, const char *gp, const char *fp);
 	static GLuint createShaderProgram(const char *vp, const char *tCS, const char* tES, const char *fp);
 	static GLuint createShaderProgram(const char *vp, const char *tCS, const char* tES, char *gp, const char *fp);
 	static GLuint loadTexture(const char *texImagePath);
 	static GLuint loadCubeMap(const char *mapDir);
+	static void displayComputeShaderLimits();
 
 	static float* goldAmbient();
 	static float* goldDiffuse();

@@ -91,7 +91,7 @@ int Utils::finalizeShaderProgram(GLuint sprogram)
 	return sprogram;
 }
 
-GLuint Utils::createShaderProgram(const char *cp)
+GLuint Utils::createShaderProgramCP(const char *cp)
 {
 	GLuint cShader = prepareShader(GL_COMPUTE_SHADER, cp);
 	GLuint cprogram = glCreateProgram();
@@ -204,6 +204,22 @@ GLuint Utils::loadTexture(const char *texImagePath)
 	}
     // ----- end of mipmap/anisotropic section
     return textureRef;
+}
+
+void Utils::displayComputeShaderLimits() {
+	int work_grp_cnt[3];
+	int work_grp_siz[3];
+	int work_grp_inv;
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &work_grp_siz[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &work_grp_siz[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &work_grp_siz[2]);
+	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &work_grp_inv);
+	printf("maximum number of workgroups is: %i  %i  %i\n", work_grp_cnt[0], work_grp_cnt[1], work_grp_cnt[2]);
+	printf("maximum size of workgroups is: %i  %i  %i\n", work_grp_siz[0], work_grp_siz[1], work_grp_siz[2]);
+	printf("max local work group invocations %i\n", work_grp_inv);
 }
 
 // GOLD material - ambient, diffuse, specular, and shininess

@@ -1,16 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <string>
 #include <iostream>
-#include <fstream>
-#include <cmath>
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp> // glm::value_ptr
-#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <Utils.hpp>
-#include <algorithm>
-#include <array>
-#include <random>
+
 
 GLuint buffer[3];
 GLuint simpleComputeShader;
@@ -20,7 +12,7 @@ int v2[] = { 30, 14, 80, 20, 51, 12 };
 int res[6];
 
 void init() {
-	simpleComputeShader = Utils::createShaderProgram("./shaders/compute_shader161.glsl");
+	simpleComputeShader = Utils::createShaderProgramCP("./shaders/compute_shader161.glsl");
 
 	glGenBuffers(3, buffer);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer[0]);
@@ -29,6 +21,8 @@ void init() {
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(v2), v2, GL_STATIC_DRAW);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer[2]);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(res), res, GL_STATIC_READ);
+
+	Utils::displayComputeShaderLimits();
 }
 
 void computeSum() {
