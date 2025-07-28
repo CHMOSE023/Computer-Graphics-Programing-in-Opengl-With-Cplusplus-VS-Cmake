@@ -1,3 +1,4 @@
+
 #version 450
 
 layout (local_size_x=1) in;
@@ -11,51 +12,56 @@ struct Ray
 	vec3 dir;	// normalized direction of the ray
 };
 
-struct Collision
-{	float t;	// value at which this collision occurs for a ray
-	vec3 p;		// The world position of the collision
-	vec3 n;		// the normal of the collision
-	bool inside;	// Whether the ray started inside the object and collided while exiting
-	int object_index;	// The index of the object this collision hit
-};
-
-
 float sphere_radius = 2.5;
 vec3 sphere_position = vec3(1.0, 0.0, -3.0);
 vec3 sphere_color = vec3(1.0, 0.0, 0.0); // red
 
-vec3 box_mins = vec3(-2.0, -2.0, 0.0);
-vec3 box_maxs = vec3(-0.5, 1.0, 2.0);
+vec3 box_mins = vec3(-0.5, -0.5, -1.0);
+vec3 box_maxs = vec3( 0.5,  0.5,  1.0);
 vec3 box_color = vec3(0.0, 1.0, 0.0); // green
 
-vec4 global_ambient = vec4(0.3, 0.3, 0.3, 1.0); // ambient light color
+const float PI = 3.14159265358;
+const float DEG_TO_RAD = PI / 180.0;
 
-vec4 objMat_ambient = vec4(0.4, 0.4, 0.4, 1.0); // ambient color of the object
-vec4 objMat_diffuse = vec4(0.9, 0.9, 0.8, 1.0); // diffuse color of the object
-vec4 objMat_specular = vec4(1.0, 1.0, 1.0, 1.0); // specular color of the object
-float objMat_shininess = 50.0; // shininess factor of the object    
+vec3 box_pos = vec3(-1, -0.5, 1.0);
+float box_xrot = DEG_TO_RAD * 10.0;
+float box_yrot = DEG_TO_RAD * 70.0;
+float box_zrot = DEG_TO_RAD * 55.0;
 
-vec3 pointLight_position = vec3(-3.0, 2.0, 4.0); // position of the point light
-vec4 pointLight_ambient =  vec4(0.3, 0.3, 0.3, 1.0); // ambient color of the point light
-vec4 pointLight_diffuse =  vec4(0.8, 0.8, 0.8, 1.0);
-vec4 pointLight_specular = vec4(1.0, 1.0, 1.0 ,1.0); // specular
+vec4 worldAmb_ambient = vec4(0.3, 0.3, 0.3, 1.0);
 
+vec4 objMat_ambient = vec4(0.2, 0.2, 0.2, 1.0);
+vec4 objMat_diffuse = vec4(0.7, 0.7, 0.7, 1.0);
+vec4 objMat_specular = vec4(1.0, 1.0, 1.0, 1.0);
+float objMat_shininess = 50.0;
 
-vec3 ads_phong_lighting(Ray r, Collision c)
-{	
-    vec4 ambient = global_ambient + pointLight_ambient * objMat_ambient;
+vec3 pointLight_position = vec3(-3.0, 2.0, 4.0);
+vec4 pointLight_ambient = vec4(0.2, 0.2, 0.2, 1.0);
+vec4 pointLight_diffuse = vec4(0.7, 0.7, 0.7, 1.0);
+vec4 pointLight_specular = vec4(1.0, 1.0, 1.0, 1.0);
 
-    // Calculate the diffuse component
-    vec3 light_dir = normalize(pointLight_position - c.p);
-    vec3 light_ref = normalize(pointLight_position - r.start);
-    float cos_theta = dot(c.n, light_dir);
-    float cos_phi = dot(normalize(-r.dir), light_ref);
+struct Collision
+{	float t;	// value at which this collision occurs for a ray
+	vec3 p;		// The world position of the collision
+	vec3 n;		// the normal of the collision
+	bool inside;	// whether the ray started inside the object and collided while exiting
+	int object_index;	// The index of the object this collision hit
+};
 
-    vec4 diffuse = pointLight_diffuse * objMat_diffuse * max(cos_theta, 0.0);
-    vec4 specular = pointLight_specular * objMat_specular * pow(max(cos_phi, 0.0), objMat_shininess);
+mat4 buildTranslate(float x, float y, float z)
+{	return mat4(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, x, y, z, 1.0);
+}
 
-    vec4 phong_color = ambient + diffuse + specular;
-    return phong_color.rgb;
+mat4 buildRotateX(float rad)
+{	return mat4(1.0,0.0,0.0,0.0,0.0,cos(rad),sin(rad),0.0,0.0,-sin(rad),cos(rad),0.0,0.0,0.0,0.0,1.0);
+}
+
+mat4 buildRotateY(float rad)
+{	return mat4(cos(rad),0.0,-sin(rad),0.0,0.0,1.0,0.0,0.0,sin(rad),0.0,cos(rad),0.0,0.0,0.0,0.0,1.0);
+}
+
+mat4 buildRotateZ(float rad)
+{	return mat4(cos(rad),sin(rad),0.0,0.0,-sin(rad),cos(rad),0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0);
 }
 
 //------------------------------------------------------------------------------
@@ -64,9 +70,20 @@ vec3 ads_phong_lighting(Ray r, Collision c)
 // http://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/basic_algo.pdf
 //------------------------------------------------------------------------------
 Collision intersect_box_object(Ray r)
-{	// Calculate the box's world mins and maxs:
-	vec3 t_min = (box_mins - r.start) / r.dir;
-	vec3 t_max = (box_maxs - r.start) / r.dir;
+{	// Compute the box's local-space to world-space transform matrices, and their inverse
+	mat4 local_to_worldT = buildTranslate(box_pos.x, box_pos.y, box_pos.z);
+	mat4 local_to_worldR = buildRotateY(box_yrot) * buildRotateX(box_xrot) * buildRotateZ(box_zrot);
+	mat4 local_to_worldTR = local_to_worldT * local_to_worldR;
+	mat4 world_to_localTR = inverse(local_to_worldTR);
+	mat4 world_to_localR = inverse(local_to_worldR);
+
+	// Convert the world-space ray to the box's local space:
+	vec3 ray_start = (world_to_localTR * vec4(r.start,1.0)).xyz;
+	vec3 ray_dir = (world_to_localR * vec4(r.dir,1.0)).xyz;
+	
+	// Calculate the box's world mins and maxs:
+	vec3 t_min = (box_mins - ray_start) / ray_dir;
+	vec3 t_max = (box_maxs - ray_start) / ray_dir;
 	vec3 t_minDist = min(t_min, t_max);
 	vec3 t_maxDist = max(t_min, t_max);
 	float t_near = max(max(t_minDist.x, t_minDist.y), t_minDist.z);
@@ -108,11 +125,14 @@ Collision intersect_box_object(Ray r)
 	c.n[face_index] = 1.0;
 
 	// If we hit the box from the negative axis, invert the normal
-	if(r.dir[face_index] > 0.0) c.n *= -1.0;
+	if(ray_dir[face_index] > 0.0) c.n *= -1.0;
+	
+	// now convert the normal back into world space
+	c.n = transpose(inverse(mat3(local_to_worldR))) * c.n;
 
 	// Calculate the world-position of the intersection:
 	c.p = r.start + c.t * r.dir;
-
+	
 	return c;
 }
 
@@ -189,14 +209,55 @@ Collision get_closest_collision(Ray r)
 }
 
 //------------------------------------------------------------------------------
+// Computes the Ambient Diffuse Specular (ADS) Phong lighting for an
+// incident Ray r at the surface of the object.  Returns the color.
+//------------------------------------------------------------------------------
+vec3 ads_phong_lighting(Ray r, Collision c)
+{	// add the contribution from the ambient and positional lights
+	vec4 ambient = worldAmb_ambient + pointLight_ambient * objMat_ambient;
+	
+	// initialize diffuse and specular contributions
+	vec4 diffuse = vec4(0.0);
+	vec4 specular = vec4(0.0);
+
+	// Check to see if any object is casting a shadow on this surface
+	Ray light_ray;
+	light_ray.start = c.p + c.n * 0.01;
+	light_ray.dir = normalize(pointLight_position - c.p);
+	bool in_shadow = false;
+
+	// Cast the ray against the scene
+	Collision c_shadow = get_closest_collision(light_ray);
+
+	// If the ray hit an object and if the hit occurred between the surface and the light
+	if(c_shadow.object_index != -1 && (c_shadow.t < length(pointLight_position - c.p)))
+	{	in_shadow = true;
+	}
+
+	// If this surface is in shadow, don't add diffuse and specular components
+	if(in_shadow == false)
+	{	// Computing the light's reflection on the surface
+		vec3 light_dir = normalize(pointLight_position - c.p);
+		vec3 light_ref = normalize( reflect(-light_dir, c.n));
+		float cos_theta = dot(light_dir, c.n);
+		float cos_phi = dot( normalize(-r.dir), light_ref);
+
+		diffuse = pointLight_diffuse * objMat_diffuse * max(cos_theta, 0.0);
+		specular = pointLight_specular * objMat_specular * pow( max( cos_phi, 0.0), objMat_shininess);
+	}
+	vec4 phong_color = ambient + diffuse + specular;
+	return phong_color.rgb;
+}
+
+
+//------------------------------------------------------------------------------
 // This function casts a ray into the scene and returns the final color for a pixel
 //------------------------------------------------------------------------------
 vec3 raytrace(Ray r)
-{	
-    Collision c = get_closest_collision(r);
+{	Collision c = get_closest_collision(r);
 	if (c.object_index == -1) return vec3(0.0);	// no collision
-	if (c.object_index == 1) return ads_phong_lighting(r, c) * sphere_color;
-	if (c.object_index == 2) return ads_phong_lighting(r, c) * box_color;
+	if (c.object_index == 1) return ads_phong_lighting(r,c) * sphere_color;
+	if (c.object_index == 2) return ads_phong_lighting(r,c) * box_color;
 }
 
 void main()

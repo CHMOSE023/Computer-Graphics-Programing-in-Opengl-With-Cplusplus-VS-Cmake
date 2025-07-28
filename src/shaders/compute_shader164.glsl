@@ -30,33 +30,16 @@ vec3 box_color = vec3(0.0, 1.0, 0.0); // green
 
 vec4 global_ambient = vec4(0.3, 0.3, 0.3, 1.0); // ambient light color
 
-vec4 objMat_ambient = vec4(0.4, 0.4, 0.4, 1.0); // ambient color of the object
-vec4 objMat_diffuse = vec4(0.9, 0.9, 0.8, 1.0); // diffuse color of the object
+vec4 objMat_ambient = vec4(0.2, 0.2, 0.2, 1.0); // ambient color of the object
+vec4 objMat_diffuse = vec4(0.7, 0.7, 0.7, 1.0); // diffuse color of the object
 vec4 objMat_specular = vec4(1.0, 1.0, 1.0, 1.0); // specular color of the object
 float objMat_shininess = 50.0; // shininess factor of the object    
 
-vec3 pointLight_position = vec3(-3.0, 2.0, 4.0); // position of the point light
-vec4 pointLight_ambient =  vec4(0.3, 0.3, 0.3, 1.0); // ambient color of the point light
-vec4 pointLight_diffuse =  vec4(0.8, 0.8, 0.8, 1.0);
+vec3 pointLight_position = vec3(-3.0, 1.8, 4.0); // position of the point light
+vec4 pointLight_ambient =  vec4(0.2, 0.2, 0.2, 1.0); // ambient color of the point light
+vec4 pointLight_diffuse =  vec4(0.7, 0.7, 0.7, 1.0);
 vec4 pointLight_specular = vec4(1.0, 1.0, 1.0 ,1.0); // specular
 
-
-vec3 ads_phong_lighting(Ray r, Collision c)
-{	
-    vec4 ambient = global_ambient + pointLight_ambient * objMat_ambient;
-
-    // Calculate the diffuse component
-    vec3 light_dir = normalize(pointLight_position - c.p);
-    vec3 light_ref = normalize(pointLight_position - r.start);
-    float cos_theta = dot(c.n, light_dir);
-    float cos_phi = dot(normalize(-r.dir), light_ref);
-
-    vec4 diffuse = pointLight_diffuse * objMat_diffuse * max(cos_theta, 0.0);
-    vec4 specular = pointLight_specular * objMat_specular * pow(max(cos_phi, 0.0), objMat_shininess);
-
-    vec4 phong_color = ambient + diffuse + specular;
-    return phong_color.rgb;
-}
 
 //------------------------------------------------------------------------------
 // Checks if Ray r intersects the Box defined by Object o.box
@@ -164,6 +147,7 @@ Collision intersect_sphere_object(Ray r)
 	return c;
 }
 
+
 //------------------------------------------------------------------------------
 // Returns the closest collision of a ray
 // object_index == -1 if no collision
@@ -187,6 +171,45 @@ Collision get_closest_collision(Ray r)
 	}
 	return closest_collision;
 }
+
+
+vec3 ads_phong_lighting(Ray r, Collision c)
+{	
+    vec4 ambient = global_ambient + pointLight_ambient * objMat_ambient;
+
+    vec4 diffuse = vec4(0.0);
+    vec4 specular = vec4(0.0);
+
+    Ray light_ray;
+    light_ray.start = c.p + c.n * 0.01; // offset the ray start to avoid self-shadowing
+    light_ray.dir = normalize(pointLight_position - c.p);
+    bool in_shadow = false;
+
+    Collision shadow_collision = get_closest_collision(light_ray);
+
+    if (shadow_collision.object_index != -1 && shadow_collision.t < length(pointLight_position - c.p))
+    {
+        // If the shadow collision is closer than the light source, we are in shadow
+        in_shadow = true;
+    }
+
+    if(in_shadow == false)
+    {	// If not in shadow, calculate the diffuse and specular components
+        // Calculate the diffuse component
+        vec3 light_dir = normalize(pointLight_position - c.p);
+        vec3 light_ref = normalize(reflect(-light_dir, c.n));
+        
+        float cos_theta = dot(light_dir,c.n);
+        float cos_phi = dot(normalize(-r.dir), light_ref);
+        
+        diffuse = pointLight_diffuse * objMat_diffuse * max(cos_theta, 0.0);
+        specular = pointLight_specular * objMat_specular * pow(max(cos_phi, 0.0), objMat_shininess);
+    }
+
+    vec4 phong_color = ambient + diffuse + specular;
+    return phong_color.rgb;
+}
+
 
 //------------------------------------------------------------------------------
 // This function casts a ray into the scene and returns the final color for a pixel
