@@ -1,4 +1,6 @@
-/build
+﻿/build
 /.vscode
 /notes
 *.json
+/out
+/.vs

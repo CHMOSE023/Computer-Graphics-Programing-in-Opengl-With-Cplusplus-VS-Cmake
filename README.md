@@ -1,49 +1,27 @@
-# Computer Graphics Programming in Opengl with c++ 
-Computer Graphics Programming in OpenGL with C++. Since there is no official repository with the book's program code, I took it upon myself to create this repository to help the book's readers access the code quickly and easily. 
+﻿# 使用 VS + CMake 构建	
 
----------
-## Build & Run
-**dependencies.**
-- OpenGl
-- glfw3
-- glm
+# Computer Graphics Programming in Opengl with c++
 
-1. clone the repository.
-```sh
-git clone git@github.com:Nobody-1321/Computer-Graphics-Programing-in-Opengl-With-C.git
-```
-2. Move to the directory 
-```sh
-cd Computer-Graphics-Programing-in-Opengl-With-C
-```
 
-3. Use conan C++ to manage the dependencies. "you can learn how to use it here [conan tutorial](https://docs.conan.io/2/tutorial.html)" 
+Computer Graphics Programming in OpenGL with C++. Since there is no official repository with the book's program code, I took it upon myself to create this repository to help the book's readers access the code quickly and easily.
+
+《使用 C++ 的 OpenGL 计算机图形编程》。由于本书没有官方程序代码仓库，我决定自己创建一个仓库，以便读者能够快速、方便地获取书中的代码。
+
+---
+
+1. 克隆仓储
 
 ```sh
-conan install . --build=missing 
+git clone https://github.com/CHMOSE023/Computer-Graphics-Programing-in-Opengl-With-Cplusplus-VS-Cmake.git
 ```
-4. Build the project.
 
-Linux users
+2、更新子模块
 
 ```sh
-python buildLinux.py
+git submodule update --init --recursive
 ```
 
-Windows users
-
-```sh
-python buildWindows.py
-```
-
-## warning 
-If you are a Windows user, you may need to change the paths to the ressources in the code.
+3、使用 vs 打开 CMakeLists.txt
 
 
-Computer Graphics Programming in OpenGl with C++. This will build the project and compile all the programs located inside the src folder.
-
----------------------------
-**You can learn more about computer graphics by reading Computer Graphics Programming in OpenGL with C++.
-Third Edition by V. Scott Gordon and John Clevenger.**
-
-![image1](graphi.png "image1")
+## warning

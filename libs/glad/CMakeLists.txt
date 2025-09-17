@@ -1,8 +1,5 @@
-cmake_minimum_required (VERSION 3.25)
-include(${CMAKE_BINARY_DIR}/generators/conan_toolchain.cmake)
-
-project(glad VERSION 1.0.0 LANGUAGES C)
-
+﻿cmake_minimum_required (VERSION 3.25)
+ 
 set(LIBRARY_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/glad/glad.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/KHR/khrplatform.h
